@@ -9,28 +9,39 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selection = 0
+    @EnvironmentObject var userSettings: UserSettings
+    @EnvironmentObject var userData: UserData
  
     var body: some View {
-        TabView(selection: $selection){
-            Text("First View")
-                .font(.title)
+        TabView(selection: $userSettings.selectedTab) {
+            HomeView()
+                .environmentObject(userSettings)
+                .environmentObject(userData)
                 .tabItem {
                     VStack {
-                        Image("first")
-                        Text("First")
+                        Image(systemName: "house")
+                        Text("Home")
                     }
                 }
                 .tag(0)
-            Text("Second View")
+            Text("Categories")
                 .font(.title)
                 .tabItem {
                     VStack {
-                        Image("second")
-                        Text("Second")
+                        Image(systemName: "square.grid.2x2.fill")
+                        Text("Categories")
                     }
                 }
                 .tag(1)
+            SettingsView()
+                .environmentObject(userSettings)
+                .tabItem {
+                    VStack {
+                        Image(systemName: "gear")
+                        Text("Settings")
+                    }
+                }
+                .tag(2)
         }
     }
 }
@@ -38,5 +49,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(UserSettings())
+            .environmentObject(UserData())
     }
 }
