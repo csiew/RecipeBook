@@ -30,4 +30,24 @@ struct RecipeIngredient: Identifiable {
         self.quantity = quantity
         self.unit = unit!
     }
+    
+    func getUnit() -> String {
+        switch self.unit {
+        case .none: return ""
+        case .mililitre: return "ml"
+        case .litre: return "l"
+        case .miligram: return "mg"
+        case .gram: return "g"
+        case .kilogram: return "kg"
+        case .teaspoon: return "tsp"
+        case .tablespoon: return "tbsp"
+        case .ladle: return "ladle"
+        case .cup: return "cup"
+        case .mug: return "mug"
+        case .bowl: return "bowl"
+        case .sauceplatter: return "sauceplatter"
+        case .piece: return "piece"
+        case .horse: return "neigh"
+        }
+    }
 }

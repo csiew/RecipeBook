@@ -41,6 +41,7 @@ struct HomeView: View {
                 }
                 .navigationBarTitle("Home", displayMode: .inline)
             }
+            .environment(\.font, self.userSettings.fontFamily)
         }
     }
 }

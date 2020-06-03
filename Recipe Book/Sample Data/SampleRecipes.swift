@@ -11,6 +11,7 @@ import Foundation
 var recipe1 = Recipe(
     name: "Baked Chicken",
     description: "An easy oven-baked chicken recipe with a simple spice-rub.",
+    source: "Somewhere online",
     genreId: "baking",
     ingredients: [
         RecipeIngredient(name: "Brown Sugar", quantity: 1, unit: .tablespoon),
@@ -37,3 +38,5 @@ var recipe2 = Recipe(name: "Potato Wedges", genreId: "baking")
 var recipe3 = Recipe(name: "Spaghetti Carbonara", genreId: "boiling")
 
 var sampleRecipes: [Recipe] = [recipe1, recipe2, recipe3]
+
+var sampleIngredient = RecipeIngredient(name: "Brown Sugar", quantity: 1, unit: .tablespoon)

@@ -14,6 +14,10 @@ struct AppearanceSettingsView: View {
     var body: some View {
         List {
             Section {
+                NavigationLink("Theme", destination: ThemeSettingsView())
+                NavigationLink("Font", destination: FontSettingsView())
+            }
+            Section(header: Text("Recipes")) {
                 Toggle(isOn: $userSettings.listsAreGrouped) {
                     Text("Grouped Lists")
                 }

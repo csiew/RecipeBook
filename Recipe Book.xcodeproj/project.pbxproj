@@ -17,6 +17,9 @@
 		1116EA1E248787D000B1F509 /* CuisineListDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA1D248787D000B1F509 /* CuisineListDetail.swift */; };
 		1116EA202487888800B1F509 /* GenreListDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA1F2487888800B1F509 /* GenreListDetail.swift */; };
 		1116EA2424878B9700B1F509 /* RecipeIngredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA2324878B9700B1F509 /* RecipeIngredient.swift */; };
+		1116EA272487A21000B1F509 /* RecipeIngredientListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA262487A21000B1F509 /* RecipeIngredientListItem.swift */; };
+		1116EA292487A2E800B1F509 /* RecipeDirectionListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA282487A2E800B1F509 /* RecipeDirectionListItem.swift */; };
+		1116EA2B2487B26A00B1F509 /* CustomColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA2A2487B26A00B1F509 /* CustomColors.swift */; };
 		118E7F622486B3B900D7D4A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118E7F612486B3B900D7D4A3 /* AppDelegate.swift */; };
 		118E7F642486B3B900D7D4A3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118E7F632486B3B900D7D4A3 /* SceneDelegate.swift */; };
 		118E7F672486B3B900D7D4A3 /* Recipe_Book.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 118E7F652486B3B900D7D4A3 /* Recipe_Book.xcdatamodeld */; };
@@ -32,6 +35,20 @@
 		118E7F9E2486B88500D7D4A3 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118E7F9D2486B88500D7D4A3 /* UserData.swift */; };
 		118E7FA02486BA4500D7D4A3 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118E7F9F2486BA4500D7D4A3 /* UserSettings.swift */; };
 		118E7FA22486BC9C00D7D4A3 /* RecipeDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118E7FA12486BC9C00D7D4A3 /* RecipeDetail.swift */; };
+		119628FC2487BB66000AACF8 /* RecipeAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119628FB2487BB66000AACF8 /* RecipeAddView.swift */; };
+		119628FF2487E11A000AACF8 /* DetailCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119628FE2487E11A000AACF8 /* DetailCellView.swift */; };
+		119629012487E4EB000AACF8 /* ThemeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119629002487E4EB000AACF8 /* ThemeSettingsView.swift */; };
+		1196291224880333000AACF8 /* FontSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1196291124880333000AACF8 /* FontSettingsView.swift */; };
+		119629202488081E000AACF8 /* gelasio-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1196291C2488081E000AACF8 /* gelasio-regular.ttf */; };
+		119629212488081E000AACF8 /* gelasio-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1196291D2488081E000AACF8 /* gelasio-bold.ttf */; };
+		119629222488081E000AACF8 /* gelasio-italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1196291E2488081E000AACF8 /* gelasio-italic.ttf */; };
+		119629232488081E000AACF8 /* gelasio-bolditalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1196291F2488081E000AACF8 /* gelasio-bolditalic.ttf */; };
+		1196292424880962000AACF8 /* PublicSans-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 11962916248807F6000AACF8 /* PublicSans-Black.otf */; };
+		1196292524880962000AACF8 /* PublicSans-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 11962917248807F7000AACF8 /* PublicSans-BlackItalic.otf */; };
+		1196292624880962000AACF8 /* PublicSans-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 11962919248807F7000AACF8 /* PublicSans-Bold.otf */; };
+		1196292724880962000AACF8 /* PublicSans-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1196291A248807F7000AACF8 /* PublicSans-BoldItalic.otf */; };
+		1196292824880962000AACF8 /* PublicSans-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 11962918248807F7000AACF8 /* PublicSans-Italic.otf */; };
+		1196292924880962000AACF8 /* PublicSans-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 11962915248807F6000AACF8 /* PublicSans-Regular.otf */; };
 		11D74BB3248752B000D8355E /* CuisineList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D74BB2248752B000D8355E /* CuisineList.swift */; };
 		11D74BB5248752BE00D8355E /* GenreList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D74BB4248752BE00D8355E /* GenreList.swift */; };
 		11D74BB72487536200D8355E /* RecipeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D74BB62487536200D8355E /* RecipeList.swift */; };
@@ -68,6 +85,9 @@
 		1116EA1D248787D000B1F509 /* CuisineListDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuisineListDetail.swift; sourceTree = "<group>"; };
 		1116EA1F2487888800B1F509 /* GenreListDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreListDetail.swift; sourceTree = "<group>"; };
 		1116EA2324878B9700B1F509 /* RecipeIngredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeIngredient.swift; sourceTree = "<group>"; };
+		1116EA262487A21000B1F509 /* RecipeIngredientListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeIngredientListItem.swift; sourceTree = "<group>"; };
+		1116EA282487A2E800B1F509 /* RecipeDirectionListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDirectionListItem.swift; sourceTree = "<group>"; };
+		1116EA2A2487B26A00B1F509 /* CustomColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColors.swift; sourceTree = "<group>"; };
 		118E7F5E2486B3B900D7D4A3 /* Recipe Book.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Recipe Book.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		118E7F612486B3B900D7D4A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		118E7F632486B3B900D7D4A3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +109,20 @@
 		118E7F9D2486B88500D7D4A3 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		118E7F9F2486BA4500D7D4A3 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		118E7FA12486BC9C00D7D4A3 /* RecipeDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetail.swift; sourceTree = "<group>"; };
+		119628FB2487BB66000AACF8 /* RecipeAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeAddView.swift; sourceTree = "<group>"; };
+		119628FE2487E11A000AACF8 /* DetailCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCellView.swift; sourceTree = "<group>"; };
+		119629002487E4EB000AACF8 /* ThemeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSettingsView.swift; sourceTree = "<group>"; };
+		1196291124880333000AACF8 /* FontSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSettingsView.swift; sourceTree = "<group>"; };
+		11962915248807F6000AACF8 /* PublicSans-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-Regular.otf"; sourceTree = "<group>"; };
+		11962916248807F6000AACF8 /* PublicSans-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-Black.otf"; sourceTree = "<group>"; };
+		11962917248807F7000AACF8 /* PublicSans-BlackItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-BlackItalic.otf"; sourceTree = "<group>"; };
+		11962918248807F7000AACF8 /* PublicSans-Italic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-Italic.otf"; sourceTree = "<group>"; };
+		11962919248807F7000AACF8 /* PublicSans-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-Bold.otf"; sourceTree = "<group>"; };
+		1196291A248807F7000AACF8 /* PublicSans-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PublicSans-BoldItalic.otf"; sourceTree = "<group>"; };
+		1196291C2488081E000AACF8 /* gelasio-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "gelasio-regular.ttf"; path = "../../../../../Downloads/gelasio/gelasio-regular.ttf"; sourceTree = "<group>"; };
+		1196291D2488081E000AACF8 /* gelasio-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "gelasio-bold.ttf"; path = "../../../../../Downloads/gelasio/gelasio-bold.ttf"; sourceTree = "<group>"; };
+		1196291E2488081E000AACF8 /* gelasio-italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "gelasio-italic.ttf"; path = "../../../../../Downloads/gelasio/gelasio-italic.ttf"; sourceTree = "<group>"; };
+		1196291F2488081E000AACF8 /* gelasio-bolditalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "gelasio-bolditalic.ttf"; path = "../../../../../Downloads/gelasio/gelasio-bolditalic.ttf"; sourceTree = "<group>"; };
 		11D74BB2248752B000D8355E /* CuisineList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuisineList.swift; sourceTree = "<group>"; };
 		11D74BB4248752BE00D8355E /* GenreList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreList.swift; sourceTree = "<group>"; };
 		11D74BB62487536200D8355E /* RecipeList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeList.swift; sourceTree = "<group>"; };
@@ -130,8 +164,20 @@
 				1116EA1124877FA500B1F509 /* AppearanceSettingsView.swift */,
 				1116EA1324877FC300B1F509 /* NotificationsSettingsView.swift */,
 				1116EA1524877FCF00B1F509 /* AccountSettingsView.swift */,
+				119629002487E4EB000AACF8 /* ThemeSettingsView.swift */,
+				1196291124880333000AACF8 /* FontSettingsView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		1116EA252487A1E700B1F509 /* Recipe Detail */ = {
+			isa = PBXGroup;
+			children = (
+				118E7FA12486BC9C00D7D4A3 /* RecipeDetail.swift */,
+				1116EA262487A21000B1F509 /* RecipeIngredientListItem.swift */,
+				1116EA282487A2E800B1F509 /* RecipeDirectionListItem.swift */,
+			);
+			path = "Recipe Detail";
 			sourceTree = "<group>";
 		};
 		118E7F552486B3B900D7D4A3 = {
@@ -157,6 +203,7 @@
 		118E7F602486B3B900D7D4A3 /* Recipe Book */ = {
 			isa = PBXGroup;
 			children = (
+				119629022487FF3D000AACF8 /* Fonts */,
 				118E7F9A2486B5CC00D7D4A3 /* Sample Data */,
 				118E7F972486B52900D7D4A3 /* Models */,
 				118E7F942486B3EA00D7D4A3 /* Views */,
@@ -201,9 +248,11 @@
 		118E7F942486B3EA00D7D4A3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				119628FD2487E101000AACF8 /* Component Views */,
 				1116EA0E24877F5F00B1F509 /* Settings */,
+				1116EA252487A1E700B1F509 /* Recipe Detail */,
+				119628FA2487BB3F000AACF8 /* Recipe Creation */,
 				118E7F952486B3F800D7D4A3 /* HomeView.swift */,
-				118E7FA12486BC9C00D7D4A3 /* RecipeDetail.swift */,
 				11D74BB2248752B000D8355E /* CuisineList.swift */,
 				11D74BB4248752BE00D8355E /* GenreList.swift */,
 				11D74BB62487536200D8355E /* RecipeList.swift */,
@@ -216,6 +265,7 @@
 		118E7F972486B52900D7D4A3 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				119628F92487B965000AACF8 /* Extensions */,
 				11D74BC1248755A700D8355E /* Entities */,
 				11D74BC02487559700D8355E /* Observables */,
 			);
@@ -230,6 +280,63 @@
 				1116EA1B248781DF00B1F509 /* SampleGenres.swift */,
 			);
 			path = "Sample Data";
+			sourceTree = "<group>";
+		};
+		119628F92487B965000AACF8 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1116EA2A2487B26A00B1F509 /* CustomColors.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		119628FA2487BB3F000AACF8 /* Recipe Creation */ = {
+			isa = PBXGroup;
+			children = (
+				119628FB2487BB66000AACF8 /* RecipeAddView.swift */,
+			);
+			path = "Recipe Creation";
+			sourceTree = "<group>";
+		};
+		119628FD2487E101000AACF8 /* Component Views */ = {
+			isa = PBXGroup;
+			children = (
+				119628FE2487E11A000AACF8 /* DetailCellView.swift */,
+			);
+			path = "Component Views";
+			sourceTree = "<group>";
+		};
+		119629022487FF3D000AACF8 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				1196291B24880805000AACF8 /* Gelasio */,
+				11962914248807EF000AACF8 /* Public Sans */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		11962914248807EF000AACF8 /* Public Sans */ = {
+			isa = PBXGroup;
+			children = (
+				11962916248807F6000AACF8 /* PublicSans-Black.otf */,
+				11962917248807F7000AACF8 /* PublicSans-BlackItalic.otf */,
+				11962919248807F7000AACF8 /* PublicSans-Bold.otf */,
+				1196291A248807F7000AACF8 /* PublicSans-BoldItalic.otf */,
+				11962918248807F7000AACF8 /* PublicSans-Italic.otf */,
+				11962915248807F6000AACF8 /* PublicSans-Regular.otf */,
+			);
+			path = "Public Sans";
+			sourceTree = "<group>";
+		};
+		1196291B24880805000AACF8 /* Gelasio */ = {
+			isa = PBXGroup;
+			children = (
+				1196291D2488081E000AACF8 /* gelasio-bold.ttf */,
+				1196291F2488081E000AACF8 /* gelasio-bolditalic.ttf */,
+				1196291E2488081E000AACF8 /* gelasio-italic.ttf */,
+				1196291C2488081E000AACF8 /* gelasio-regular.ttf */,
+			);
+			path = Gelasio;
 			sourceTree = "<group>";
 		};
 		11D74BC02487559700D8355E /* Observables */ = {
@@ -358,7 +465,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				118E7F712486B3BB00D7D4A3 /* LaunchScreen.storyboard in Resources */,
+				1196292424880962000AACF8 /* PublicSans-Black.otf in Resources */,
+				119629232488081E000AACF8 /* gelasio-bolditalic.ttf in Resources */,
+				1196292824880962000AACF8 /* PublicSans-Italic.otf in Resources */,
+				119629222488081E000AACF8 /* gelasio-italic.ttf in Resources */,
 				118E7F6E2486B3BB00D7D4A3 /* Preview Assets.xcassets in Resources */,
+				1196292724880962000AACF8 /* PublicSans-BoldItalic.otf in Resources */,
+				119629212488081E000AACF8 /* gelasio-bold.ttf in Resources */,
+				1196292524880962000AACF8 /* PublicSans-BlackItalic.otf in Resources */,
+				119629202488081E000AACF8 /* gelasio-regular.ttf in Resources */,
+				1196292924880962000AACF8 /* PublicSans-Regular.otf in Resources */,
+				1196292624880962000AACF8 /* PublicSans-Bold.otf in Resources */,
 				118E7F6B2486B3BB00D7D4A3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -385,10 +502,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				118E7F622486B3B900D7D4A3 /* AppDelegate.swift in Sources */,
+				1196291224880333000AACF8 /* FontSettingsView.swift in Sources */,
 				1116EA1E248787D000B1F509 /* CuisineListDetail.swift in Sources */,
 				11D74BBD248754EA00D8355E /* CategoryData.swift in Sources */,
 				1116EA1024877F7800B1F509 /* GeneralSettingsView.swift in Sources */,
 				1116EA182487814700B1F509 /* Genre.swift in Sources */,
+				1116EA2B2487B26A00B1F509 /* CustomColors.swift in Sources */,
+				119628FC2487BB66000AACF8 /* RecipeAddView.swift in Sources */,
 				11D74BB3248752B000D8355E /* CuisineList.swift in Sources */,
 				118E7F992486B53200D7D4A3 /* Recipe.swift in Sources */,
 				11D74BBF2487552C00D8355E /* SampleCuisines.swift in Sources */,
@@ -396,8 +516,10 @@
 				1116EA0D24877E6D00B1F509 /* SettingsView.swift in Sources */,
 				1116EA1624877FCF00B1F509 /* AccountSettingsView.swift in Sources */,
 				1116EA202487888800B1F509 /* GenreListDetail.swift in Sources */,
+				1116EA292487A2E800B1F509 /* RecipeDirectionListItem.swift in Sources */,
 				11D74BB5248752BE00D8355E /* GenreList.swift in Sources */,
 				118E7FA22486BC9C00D7D4A3 /* RecipeDetail.swift in Sources */,
+				119629012487E4EB000AACF8 /* ThemeSettingsView.swift in Sources */,
 				118E7F9E2486B88500D7D4A3 /* UserData.swift in Sources */,
 				11D74BB72487536200D8355E /* RecipeList.swift in Sources */,
 				118E7F642486B3B900D7D4A3 /* SceneDelegate.swift in Sources */,
@@ -407,6 +529,8 @@
 				118E7F9C2486B5D600D7D4A3 /* SampleRecipes.swift in Sources */,
 				1116EA1424877FC300B1F509 /* NotificationsSettingsView.swift in Sources */,
 				1116EA1224877FA500B1F509 /* AppearanceSettingsView.swift in Sources */,
+				1116EA272487A21000B1F509 /* RecipeIngredientListItem.swift in Sources */,
+				119628FF2487E11A000AACF8 /* DetailCellView.swift in Sources */,
 				118E7F692486B3B900D7D4A3 /* ContentView.swift in Sources */,
 				1116EA1C248781DF00B1F509 /* SampleGenres.swift in Sources */,
 				118E7F672486B3B900D7D4A3 /* Recipe_Book.xcdatamodeld in Sources */,

@@ -73,9 +73,9 @@ struct RecipeList: View {
                         ]
                     )
                 }
-                Button(action: {
-                    print("Add button pressed")
-                }, label: { Image(systemName: "plus") })
+                NavigationLink(destination: RecipeAddView()) {
+                    Image(systemName: "plus")
+                }
             }
         )
     }

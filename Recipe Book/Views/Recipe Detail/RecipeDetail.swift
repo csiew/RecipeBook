@@ -28,21 +28,25 @@ struct RecipeDetail: View {
                         .padding([.top, .bottom], 8)
                         .frame(maxWidth: reader.size.width, alignment: .topLeading)
                     }
+                    Spacer()
+                    if self.recipe.source != "" {
+                        Section(header: Text("Source").font(.headline)) {
+                                Text(self.recipe.source)
+                                    .padding(.all, 8)
+                                    .frame(maxWidth: reader.size.width, alignment: .leading)
+                        }
+                        .padding([.top, .bottom], 8)
+                        .frame(maxWidth: reader.size.width, alignment: .topLeading)
+                    }
+                    Spacer()
                     Section(header: Text("Ingredients").font(.headline)) {
                         if self.recipe.ingredients.count > 0 {
                             VStack {
                                 ForEach(1..<self.recipe.ingredients.count, id: \.self) { index in
-                                    HStack {
-                                        Text(self.recipe.ingredients[index].name)
-                                            .lineLimit(nil)
-                                        Spacer()
-                                        if self.recipe.ingredients[index].quantity != nil {
-                                            Text("\(self.recipe.ingredients[index].quantity!)")
-                                        }
-                                    }
+                                    RecipeIngredientListItem(ingredient: self.recipe.ingredients[index])
                                     .padding(.all, 8)
                                     .frame(maxWidth: reader.size.width, alignment: .leading)
-                                    .background(index % 2 != 0 ? Color(UIColor(red: 0.95, green: 0.9, blue: 0.85, alpha: 1.00)) : Color(UIColor.systemBackground))
+                                        .background(index % 2 != 0 ? Color(UIColor.lightBeige) : Color(UIColor.darkBeige))
                                 }
                             }
                             .frame(maxWidth: reader.size.width)
@@ -58,30 +62,10 @@ struct RecipeDetail: View {
                         if self.recipe.directions.count > 0 {
                             VStack {
                                 ForEach(1..<self.recipe.directions.count, id: \.self) { index in
-                                    HStack {
-                                        HStack {
-                                            Circle()
-                                            .foregroundColor(Color.red)
-                                            .overlay(
-                                                Circle()
-                                                    .strokeBorder(Color.red, lineWidth: 1)
-                                            )
-                                            .overlay(
-                                                Text("\(index)")
-                                                    .bold()
-                                                    .foregroundColor(.white)
-                                            )
-                                                .frame(idealWidth: 32, maxWidth: 32, idealHeight: 32)
-                                        }
-                                        .padding(.trailing, 8)
-                                        .frame(alignment: .topLeading)
-                                        Text(self.recipe.directions[index])
-                                            .lineLimit(nil)
-                                            .fixedSize(horizontal: false, vertical: true)
-                                    }
+                                    RecipeDirectionListItem(index: index, direction: self.recipe.directions[index])
                                     .padding(.all, 8)
                                     .frame(maxWidth: reader.size.width, alignment: .leading)
-                                    .background(index % 2 != 0 ? Color(UIColor(red: 0.8, green: 0.9, blue: 0.95, alpha: 1.00)) : Color(UIColor.systemBackground))
+                                        .background(index % 2 != 0 ? Color(UIColor.lightBlue) : Color(UIColor.systemBackground))
                                 }
                             }
                             .frame(maxWidth: reader.size.width)
@@ -92,6 +76,12 @@ struct RecipeDetail: View {
                     }
                         .padding([.top, .bottom], 8)
                         .frame(maxWidth: reader.size.width, alignment: .topLeading)
+                    Section {
+                        Text("Voila").font(.title)
+                    }
+                    .padding(.top, 16)
+                    .padding(.bottom, 32)
+                    .frame(maxWidth: reader.size.width, alignment: .center)
                 }
                 .padding([.top, .bottom], 8)
                 .padding([.leading, .trailing], 16)

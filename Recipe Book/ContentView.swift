@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var userSettings: UserSettings
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var userData: UserData
  
     var body: some View {
@@ -43,6 +44,8 @@ struct ContentView: View {
                 }
                 .tag(2)
         }
+        .environment(\.colorScheme, userSettings.theme)
+        .preferredColorScheme(userSettings.theme)
     }
 }
 
