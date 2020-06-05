@@ -10,7 +10,7 @@ import SwiftUI
 
 struct DetailCellView: View {
     var title: Text
-    var detail: String?
+    var detail: Text?
     var customIcon: UIImage?
     var systemIcon: String?
     
@@ -22,12 +22,10 @@ struct DetailCellView: View {
                     self.title
                     Spacer()
                     if self.detail != nil {
-                        Text(self.detail!)
-                    }
-                    if self.customIcon != nil {
+                        self.detail!
+                    } else if self.customIcon != nil {
                         Image(uiImage: self.customIcon!)
-                    }
-                    if self.systemIcon != nil {
+                    } else if self.systemIcon != nil {
                         Image(systemName: self.systemIcon!)
                     }
                 }
@@ -38,6 +36,6 @@ struct DetailCellView: View {
 
 struct DetailCellView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailCellView(title: Text("Cell Title"), detail: "Detail")
+        DetailCellView(title: Text("Cell Title"), detail: Text("Detail"))
     }
 }

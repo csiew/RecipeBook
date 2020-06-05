@@ -24,7 +24,6 @@ struct SettingsView: View {
             .listStyle(GroupedListStyle())
             .navigationBarTitle("Settings", displayMode: .inline)
         }
-        .environment(\.font, userSettings.fontFamily)
     }
 }
 

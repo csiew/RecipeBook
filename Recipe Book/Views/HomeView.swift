@@ -19,29 +19,19 @@ struct HomeView: View {
             NavigationView {
                 List {
                     Section {
-                        NavigationLink("Recipes",
-                                       destination: RecipeList()
-                                        .environmentObject(self.userSettings)
-                                        .environmentObject(self.categoryData)
-                                        .environmentObject(self.userData)
-                        )
-                        NavigationLink("Cuisines",
-                                       destination: CuisineList()
-                                        .environmentObject(self.userSettings)
-                                        .environmentObject(self.categoryData)
-                                        .environmentObject(self.userData)
-                        )
-                        NavigationLink("Genres",
-                                       destination: GenreList()
-                                        .environmentObject(self.userSettings)
-                                        .environmentObject(self.categoryData)
-                                        .environmentObject(self.userData)
-                        )
+                        NavigationLink("Recipes", destination: RecipeList())
+                        NavigationLink("Cuisines", destination: CuisineList())
+                        NavigationLink("Genres", destination: GenreList())
+                    }
+                    Section(header: Text("Stats")) {
+                        DetailCellView(title: Text("Recipes"), detail: Text("\(self.userData.recipes.count)").foregroundColor(Color.secondary))
+                        DetailCellView(title: Text("Cuisines"), detail: Text("\(self.categoryData.cuisines.count)").foregroundColor(Color.secondary))
+                        DetailCellView(title: Text("Genres"), detail: Text("\(self.categoryData.genres.count)").foregroundColor(Color.secondary))
                     }
                 }
+                .listStyle(GroupedListStyle())
                 .navigationBarTitle("Home", displayMode: .inline)
             }
-            .environment(\.font, self.userSettings.fontFamily)
         }
     }
 }
@@ -49,8 +39,5 @@ struct HomeView: View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
-            .environmentObject(UserSettings())
-            .environmentObject(CategoryData())
-            .environmentObject(UserData())
     }
 }

@@ -50,4 +50,16 @@ struct RecipeIngredient: Identifiable {
         case .horse: return "neigh"
         }
     }
+    
+    func isMatching(ingredient: RecipeIngredient) -> Bool {
+        if
+            self.id == ingredient.id &&
+            self.name == ingredient.name &&
+            self.quantity == ingredient.quantity &&
+            self.unit == ingredient.unit
+        {
+            return true
+        }
+        return false
+    }
 }

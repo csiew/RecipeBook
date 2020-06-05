@@ -14,7 +14,7 @@ struct FontSettingsView: View {
     
     var body: some View {
         List {
-            Section {
+            Section(footer: Text("These changes will take effect after restarting the app.")) {
                 DetailCellView(title: Text("San Francisco").font(FontScheme.sanfran()), systemIcon: userSettings.chosenFontFamily == .SanFrancisco ? "checkmark" : nil)
                     .onTapGesture {
                         print("San Fran")
@@ -24,6 +24,11 @@ struct FontSettingsView: View {
                     .onTapGesture {
                         print("Public Sans")
                         self.setFontFamily(font: .PublicSans)
+                    }
+                DetailCellView(title: Text("Fira Sans").font(FontScheme.firasans()), systemIcon: userSettings.chosenFontFamily == .FiraSans ? "checkmark" : nil)
+                    .onTapGesture {
+                        print("Fira Sans")
+                        self.setFontFamily(font: .FiraSans)
                     }
                 DetailCellView(title: Text("Gelasio").font(FontScheme.gelasio()), systemIcon: userSettings.chosenFontFamily == .Gelasio ? "checkmark" : nil)
                     .onTapGesture {
@@ -44,6 +49,9 @@ struct FontSettingsView: View {
         case .PublicSans:
             self.userSettings.chosenFontFamily = FontSchemeSupplemental.PublicSans
             self.userSettings.fontFamily = FontScheme.publicsans()
+        case .FiraSans:
+            self.userSettings.chosenFontFamily = FontSchemeSupplemental.FiraSans
+            self.userSettings.fontFamily = FontScheme.firasans()
         case .Gelasio:
             self.userSettings.chosenFontFamily = FontSchemeSupplemental.Gelasio
             self.userSettings.fontFamily = FontScheme.gelasio()

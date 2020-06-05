@@ -19,6 +19,7 @@ struct CuisineList: View {
                 NavigationLink(cuisine.name, destination: CuisineListDetail(cuisine: cuisine))
             }
         }
+        .listStyle(PlainListStyle())
         .navigationBarTitle("Cuisines", displayMode: .inline)
     }
 }
@@ -26,8 +27,5 @@ struct CuisineList: View {
 struct CuisineList_Previews: PreviewProvider {
     static var previews: some View {
         CuisineList()
-            .environmentObject(UserSettings())
-            .environmentObject(CategoryData())
-            .environmentObject(UserData())
     }
 }

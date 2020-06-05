@@ -14,6 +14,12 @@
 		<string>gelasio-bolditalic.ttf</string>
 		<string>gelasio-italic.ttf</string>
 		<string>gelasio-regular.ttf</string>
+		<string>FiraSans-Bold.otf</string>
+		<string>FiraSans-BoldItalic.otf</string>
+		<string>FiraSans-Book.otf</string>
+		<string>FiraSans-BookItalic.otf</string>
+		<string>FiraSans-Light.otf</string>
+		<string>FiraSans-LightItalic.otf</string>
 	</array>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.lifestyle</string>

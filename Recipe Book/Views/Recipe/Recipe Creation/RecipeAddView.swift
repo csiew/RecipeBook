@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct RecipeAddView: View {
+    @Environment(\.presentationMode) var presentationMode
+    @State var showingIsModifiedAlert: Bool = false
     @State var name: String = ""
     @State var description: String = ""
     @State var source: String = ""
@@ -66,7 +68,36 @@ struct RecipeAddView: View {
             }
             .frame(maxWidth: reader.size.width, maxHeight: reader.size.height, alignment: .topLeading)
             .navigationBarTitle(Text("Add Recipe"), displayMode: .inline)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading:
+                HStack {
+                    Button("Cancel", action: {
+                        if self.isModified() {
+                            self.showingIsModifiedAlert.toggle()
+                        } else {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    })
+                    .alert(isPresented: self.$showingIsModifiedAlert) {
+                        Alert(
+                            title: Text("Add Recipe"),
+                            message: Text("It looks like you had something going. Are you sure you want to cancel creating your new recipe?"),
+                            primaryButton: .destructive(Text("Yes").bold(), action: {
+                                self.presentationMode.wrappedValue.dismiss()
+                            }),
+                            secondaryButton: .default(Text("Continue Editing"))
+                        )
+                    }
+                }
+            )
         }
+    }
+    
+    func isModified() -> Bool {
+        if self.name != "" || self.description != "" || self.source != "" || self.ingredients.count > 0 || self.directions.count > 0 || self.cuisineId != nil || self.genreId != nil {
+            return true
+        }
+        return false
     }
 }
 

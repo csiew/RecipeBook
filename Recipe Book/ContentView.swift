@@ -16,8 +16,6 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $userSettings.selectedTab) {
             HomeView()
-                .environmentObject(userSettings)
-                .environmentObject(userData)
                 .tabItem {
                     VStack {
                         Image(systemName: "house")
@@ -25,27 +23,34 @@ struct ContentView: View {
                     }
                 }
                 .tag(0)
-            Text("Categories")
-                .font(.title)
+            PantryView()
                 .tabItem {
                     VStack {
-                        Image(systemName: "square.grid.2x2.fill")
-                        Text("Categories")
+                        Image(systemName: "cube.box")
+                        Text("Pantry")
                     }
                 }
                 .tag(1)
+            Text("Salon")
+                .font(.title)
+                .tabItem {
+                    VStack {
+                        Image(systemName: "bubble.left.and.bubble.right")
+                        Text("Salon")
+                    }
+                }
+                .tag(2)
             SettingsView()
-                .environmentObject(userSettings)
                 .tabItem {
                     VStack {
                         Image(systemName: "gear")
                         Text("Settings")
                     }
                 }
-                .tag(2)
+                .tag(3)
         }
-        .environment(\.colorScheme, userSettings.theme)
-        .preferredColorScheme(userSettings.theme)
+        .environment(\.colorScheme, self.userSettings.theme)
+        .preferredColorScheme(self.userSettings.theme)
     }
 }
 

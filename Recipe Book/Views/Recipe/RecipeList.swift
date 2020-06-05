@@ -57,6 +57,7 @@ struct RecipeList: View {
         List {
             recipeListView()
         }
+        .listStyle(PlainListStyle())
         .navigationBarTitle("Recipes", displayMode: .inline)
         .navigationBarItems(trailing:
             HStack {
@@ -104,9 +105,6 @@ struct RecipeList: View {
 
 struct RecipeList_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
-            .environmentObject(UserSettings())
-            .environmentObject(CategoryData())
-            .environmentObject(UserData())
+        RecipeList()
     }
 }

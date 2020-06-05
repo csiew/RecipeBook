@@ -28,9 +28,10 @@ enum ColorSchemeSupplemental {
 class FontScheme {
     static func sanfran() -> Font? { return Font(UIFont.systemFont(ofSize: 17)) }
     static func publicsans() -> Font? { return Font(UIFont(name: "Public Sans", size: 17)!) }
+    static func firasans() -> Font? { return Font(UIFont(name: "Fira Sans", size: 17)!) }
     static func gelasio() -> Font? { return Font(UIFont(name: "Gelasio", size: 17)!) }
 }
 
 enum FontSchemeSupplemental {
-    case SanFrancisco, PublicSans, Gelasio
+    case SanFrancisco, PublicSans, FiraSans, Gelasio
 }

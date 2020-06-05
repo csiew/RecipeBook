@@ -19,6 +19,7 @@ struct GenreList: View {
                 NavigationLink(genre.name, destination: GenreListDetail(genre: genre))
             }
         }
+        .listStyle(PlainListStyle())
         .navigationBarTitle("Genres", displayMode: .inline)
     }
 }
@@ -26,8 +27,5 @@ struct GenreList: View {
 struct GenreList_Previews: PreviewProvider {
     static var previews: some View {
         GenreList()
-            .environmentObject(UserSettings())
-            .environmentObject(CategoryData())
-            .environmentObject(UserData())
     }
 }
