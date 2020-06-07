@@ -28,11 +28,11 @@ struct RecipeList: View {
     func sortedRecipes(sort: RecipeSortingOption) -> [Recipe] {
         switch sort {
         case .none:
-            return userData.recipes
+            return userData.getRecipes()
         case .ascending:
-            return userData.recipes.sorted(by: { $0.name < $1.name })
+            return userData.getRecipes().sorted(by: { $0.name < $1.name })
         case .descending:
-            return userData.recipes.sorted(by: { $0.name > $1.name })
+            return userData.getRecipes().sorted(by: { $0.name > $1.name })
         }
     }
     
@@ -74,7 +74,7 @@ struct RecipeList: View {
                         ]
                     )
                 }
-                NavigationLink(destination: RecipeAddView()) {
+                NavigationLink(destination: RecipeDetail(recipe: Recipe(), editMode: .active, isNewRecipe: true)) {
                     Image(systemName: "plus")
                 }
             }
@@ -88,7 +88,7 @@ struct RecipeList: View {
                 ForEach(sortedGroupedRecipes(sort: sortingOption), id: \.self.id) { group in
                     Section(header: Text(group.id)) {
                         ForEach(group.recipes, id: \.self.id) { recipe in
-                            NavigationLink(recipe.name, destination: RecipeDetail(recipe: recipe))
+                            NavigationLink(recipe.name, destination: RecipeDetail(recipe: recipe, editMode: .inactive))
                         }
                     }
                 }
@@ -96,7 +96,7 @@ struct RecipeList: View {
         case false:
             return AnyView(
                 ForEach(sortedRecipes(sort: sortingOption), id: \.self.id) { recipe in
-                    NavigationLink(recipe.name, destination: RecipeDetail(recipe: recipe))
+                    NavigationLink(recipe.name, destination: RecipeDetail(recipe: recipe, editMode: .inactive))
                 }
             )
         }

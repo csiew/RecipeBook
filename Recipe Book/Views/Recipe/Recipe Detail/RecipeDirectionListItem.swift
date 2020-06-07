@@ -13,7 +13,7 @@ struct RecipeDirectionListItem: View {
     var direction: String
     
     var body: some View {
-        HStack {
+        VStack {
             HStack {
                 Circle()
                 .foregroundColor(Color.red)
@@ -22,18 +22,20 @@ struct RecipeDirectionListItem: View {
                         .strokeBorder(Color.red, lineWidth: 1)
                 )
                 .overlay(
-                    Text("\(index)")
+                    Text("\(index+1)")
                         .bold()
                         .foregroundColor(.white)
                 )
-                    .frame(idealWidth: 32, maxWidth: 32, idealHeight: 32)
+                .frame(minWidth: 32, maxWidth: 32, idealHeight: 32)
+                .fixedSize()
             }
-            .padding(.trailing, 8)
-            .frame(alignment: .topLeading)
+            .padding(.bottom, 8)
             Text(direction)
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(maxWidth: .infinity)
     }
 }
 

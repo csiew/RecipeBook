@@ -66,6 +66,7 @@
 		11D7BE962489095700DCB25C /* FiraSans-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 11D7BE902489095700DCB25C /* FiraSans-Book.otf */; };
 		11D7BE972489095700DCB25C /* FiraSans-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 11D7BE912489095700DCB25C /* FiraSans-BookItalic.otf */; };
 		11D7BE982489095700DCB25C /* FiraSans-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 11D7BE922489095700DCB25C /* FiraSans-Bold.otf */; };
+		11F6B06F248D3DE6001E095D /* RecipeEditDirections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F6B06E248D3DE6001E095D /* RecipeEditDirections.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -151,6 +152,7 @@
 		11D7BE902489095700DCB25C /* FiraSans-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "FiraSans-Book.otf"; path = "../../../../../Downloads/fira-sans/FiraSans-Book.otf"; sourceTree = "<group>"; };
 		11D7BE912489095700DCB25C /* FiraSans-BookItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "FiraSans-BookItalic.otf"; path = "../../../../../Downloads/fira-sans/FiraSans-BookItalic.otf"; sourceTree = "<group>"; };
 		11D7BE922489095700DCB25C /* FiraSans-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "FiraSans-Bold.otf"; path = "../../../../../Downloads/fira-sans/FiraSans-Bold.otf"; sourceTree = "<group>"; };
+		11F6B06E248D3DE6001E095D /* RecipeEditDirections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditDirections.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +198,7 @@
 				118E7FA12486BC9C00D7D4A3 /* RecipeDetail.swift */,
 				1116EA262487A21000B1F509 /* RecipeIngredientListItem.swift */,
 				1116EA282487A2E800B1F509 /* RecipeDirectionListItem.swift */,
+				11F6B06E248D3DE6001E095D /* RecipeEditDirections.swift */,
 			);
 			path = "Recipe Detail";
 			sourceTree = "<group>";
@@ -583,6 +586,7 @@
 				118E7F622486B3B900D7D4A3 /* AppDelegate.swift in Sources */,
 				1196291224880333000AACF8 /* FontSettingsView.swift in Sources */,
 				1116EA1E248787D000B1F509 /* CuisineListDetail.swift in Sources */,
+				11F6B06F248D3DE6001E095D /* RecipeEditDirections.swift in Sources */,
 				11D74BBD248754EA00D8355E /* CategoryData.swift in Sources */,
 				1116EA1024877F7800B1F509 /* GeneralSettingsView.swift in Sources */,
 				1116EA182487814700B1F509 /* Genre.swift in Sources */,

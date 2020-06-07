@@ -14,11 +14,11 @@ enum MeasurementUnit {
     case miligram, gram, kilogram
     case teaspoon, tablespoon, ladle
     case cup, mug, bowl, sauceplatter
-    case piece
+    case piece, stick, block, pinch, quarts
     case horse  // so hungry that I could eat a horse
 }
 
-struct RecipeIngredient: Identifiable {
+struct RecipeIngredient: Hashable, Identifiable {
     var id: String
     var name: String
     var quantity: Int?
@@ -47,6 +47,10 @@ struct RecipeIngredient: Identifiable {
         case .bowl: return "bowl"
         case .sauceplatter: return "sauceplatter"
         case .piece: return "piece"
+        case .stick: return "stick"
+        case .block: return "block"
+        case .pinch: return "pinch"
+        case .quarts: return "quarts"
         case .horse: return "neigh"
         }
     }

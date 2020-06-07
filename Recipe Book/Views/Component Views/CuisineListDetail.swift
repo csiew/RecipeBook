@@ -16,8 +16,8 @@ struct CuisineListDetail: View {
     
     var body: some View {
         List {
-            ForEach(self.userData.recipes.filter { $0.cuisineId == cuisine.id }, id: \.self.id) { recipe in
-                NavigationLink(recipe.name, destination: RecipeDetail(recipe: recipe))
+            ForEach(self.userData.getRecipes().filter { $0.cuisineId == cuisine.id }, id: \.self.id) { recipe in
+                NavigationLink(recipe.name, destination: RecipeDetail(recipe: recipe, editMode: .inactive))
             }
         }
         .navigationBarTitle("Recipes", displayMode: .inline)

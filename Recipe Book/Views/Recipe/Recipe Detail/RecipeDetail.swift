@@ -10,19 +10,26 @@ import Foundation
 import SwiftUI
 
 struct RecipeDetail: View {
+    // Observers
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var userData: UserData
+    @ObservedObject var recipeDataObserver = RecipeDataObserver()
+    
+    // View initialisers
     @State var recipe: Recipe
-    @State var editMode: EditMode = .inactive
-    @State var showingIsModifiedAlert: Bool = false
+    @State var editMode: EditMode
+    
+    // Data
     @State var name: String = ""
     @State var description: String = ""
     @State var source: String = ""
-    @State var ingredients: [RecipeIngredient] = Array<RecipeIngredient>()
-    @State var directions: [String] = Array<String>()
     @State var cuisineId: String?
     @State var genreId: String?
     
-    @State private var ingredientsOffset = CGSize.zero
+    // Flags
+    @State var isNewRecipe: Bool? = false
+    @State var showingIsModifiedAlert: Bool = false
+    @State var showingDirectionsEditor: Bool = false
     
     var body: some View {
         GeometryReader { reader in
@@ -39,28 +46,43 @@ struct RecipeDetail: View {
                     HStack {
                         if self.editMode == .active {
                             Button("Cancel", action: {
-                                if self.isModified() {
+                                if self.isModified() == true {
                                     self.showingIsModifiedAlert.toggle()
                                 } else {
-                                    self.toggleEditMode(isCancel: true)
+                                    self.toggleEditMode()
                                 }
                             })
                             .alert(isPresented: self.$showingIsModifiedAlert) {
-                                Alert(
-                                    title: Text("Edit Recipe"),
-                                    message: Text("Are you sure you want to discard the changes you have made?"),
-                                    primaryButton: .destructive(Text("Yes").bold(), action: {
-                                        self.editMode.toggle()
-                                    }),
-                                    secondaryButton: .default(Text("Continue Editing"))
-                                )
+                                if self.isNewRecipe == false {
+                                    return Alert(
+                                        title: Text("Edit Recipe"),
+                                        message: Text("Are you sure you want to discard the changes you have made?"),
+                                        primaryButton: .destructive(Text("Yes").bold(), action: {
+                                            self.editMode.toggle()
+                                        }),
+                                        secondaryButton: .default(Text("Continue Editing"))
+                                    )
+                                } else {
+                                    return Alert(
+                                        title: Text("Add Recipe"),
+                                        message: Text("It looks like you had something going. Are you sure you want to cancel creating your new recipe?"),
+                                        primaryButton: .destructive(Text("Yes").bold(), action: {
+                                            self.presentationMode.wrappedValue.dismiss()
+                                        }),
+                                        secondaryButton: .default(Text("Continue Editing"))
+                                    )
+                                }
                             }
                         }
                     },
                 trailing:
                     HStack {
                         Button(action: { self.toggleEditMode() }) {
-                            Text(self.editMode.title)
+                            if self.editMode == .inactive {
+                                Text(self.editMode.title)
+                            } else {
+                                Text(self.editMode.title).bold()
+                            }
                         }
                     }
             )
@@ -73,28 +95,26 @@ struct RecipeDetail: View {
             self.name != self.recipe.name ||
             self.description != self.recipe.description ||
             self.source != self.recipe.source ||
-            ArrayComparison.isMatchingIngredient(array1: self.ingredients, array2: self.recipe.ingredients) == false ||
-            ArrayComparison.isMatchingString(array1: self.directions, array2: self.recipe.directions) == false ||
+            ArrayComparison.isMatchingIngredientContent(array1: self.recipeDataObserver.ingredients, array2: self.recipe.ingredients) == false ||
+            ArrayComparison.isMatchingString(array1: self.recipeDataObserver.directions, array2: self.recipe.directions) == false ||
             self.cuisineId != self.recipe.cuisineId ||
             self.genreId != self.recipe.genreId
         {
             print("Modifications detected")
             return true
         }
+        print("No modifications detected")
         return false
     }
     
-    func toggleEditMode(isCancel: Bool = false) {
+    func toggleEditMode() {
         if self.editMode == .active {
-            if isCancel == true && self.isModified() == true {
-                // Handle cancelling when changes have been made
-                self.showingIsModifiedAlert.toggle()
-            } else if isCancel == false && self.isModified() == true {
-                // Handle saving
+            if self.isModified() == true {
                 self.recipe = self.saveRecipe()
-                self.editMode.toggle()
-            } else {
-                self.editMode.toggle()
+            }
+            self.editMode.toggle()
+            if self.isNewRecipe == true {
+                self.presentationMode.wrappedValue.dismiss()
             }
         } else {
             self.loadRecipe()
@@ -103,8 +123,7 @@ struct RecipeDetail: View {
     }
     
     func saveRecipe() -> Recipe {
-        let recipeId = self.recipe.id
-        let modifiedRecipe = Recipe(id: recipeId, name: self.name, description: self.description, source: self.source, cuisineId: self.cuisineId, genreId: self.genreId, ingredients: self.ingredients, directions: self.directions)
+        let modifiedRecipe = Recipe(id: self.recipe.id, name: self.name, description: self.description, source: self.source, cuisineId: self.cuisineId, genreId: self.genreId, ingredients: self.recipeDataObserver.ingredients, directions: self.recipeDataObserver.directions)
         userData.setRecipe(recipe: modifiedRecipe)
         return modifiedRecipe
     }
@@ -113,8 +132,8 @@ struct RecipeDetail: View {
         self.name = self.recipe.name
         self.description = self.recipe.description
         self.source = self.recipe.source
-        self.ingredients = self.recipe.ingredients
-        self.directions = self.recipe.directions
+        self.recipeDataObserver.ingredients = self.recipe.ingredients
+        self.recipeDataObserver.directions = self.recipe.directions
         self.cuisineId = self.recipe.cuisineId
         self.genreId = self.recipe.genreId
     }
@@ -122,6 +141,7 @@ struct RecipeDetail: View {
     func recipeDetailConditionalView() -> AnyView {
         switch self.editMode {
         case .inactive:
+            //MARK: - Read-only view
             return AnyView(
                 VStack {
                     Text(self.recipe.name)
@@ -152,30 +172,32 @@ struct RecipeDetail: View {
                     Section(header: Text("Ingredients").font(.headline)) {
                         if self.recipe.ingredients.count > 0 {
                             VStack {
-                                ForEach(1..<self.recipe.ingredients.count, id: \.self) { index in
+                                ForEach(0..<self.recipe.ingredients.count, id: \.self) { index in
                                     RecipeIngredientListItem(ingredient: self.recipe.ingredients[index])
-                                    .padding(.all, 8)
+                                        .padding(.all, 16)
                                         .frame(maxWidth: .infinity, alignment: .leading)
-                                        .background(index % 2 != 0 ? Color(UIColor.lightBeige) : Color(UIColor.darkBeige))
+                                        .background(index % 2 == 0 ? Color(UIColor.lightBeige) : Color(UIColor.darkBeige))
                                 }
                             }
                             .frame(maxWidth: .infinity)
+                            .cornerRadius(8)
                         } else {
                             Text("No ingredients for this recipe")
                                 .foregroundColor(.secondary)
                         }
                     }
-                        .padding([.top, .bottom], 8)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .padding([.top, .bottom], 8)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
                     Spacer()
                     Section(header: Text("Directions").font(.headline)) {
                         if self.recipe.directions.count > 0 {
                             VStack {
-                                ForEach(1..<self.recipe.directions.count, id: \.self) { index in
+                                ForEach(0..<self.recipe.directions.count, id: \.self) { index in
                                     RecipeDirectionListItem(index: index, direction: self.recipe.directions[index])
-                                    .padding(.all, 8)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .background(index % 2 != 0 ? Color(UIColor.lightBlue) : Color(UIColor.systemBackground))
+                                        .padding(.all, 16)
+                                        .frame(maxWidth: .infinity, alignment: .top)
+                                        .background(index % 2 == 0 ? Color(UIColor.lightBlue) : Color(UIColor.secondarySystemFill))
+                                        .cornerRadius(8)
                                 }
                             }
                             .frame(maxWidth: .infinity)
@@ -184,17 +206,12 @@ struct RecipeDetail: View {
                                 .foregroundColor(.secondary)
                         }
                     }
-                        .padding([.top, .bottom], 8)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
-                    Section {
-                        Text("Voila").font(.title)
-                    }
-                    .padding(.top, 16)
-                    .padding(.bottom, 32)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding([.top, .bottom], 8)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
                 }
             )
         case .active:
+            //MARK: - Edit view
             return AnyView(
                 VStack {
                     TextField("Name", text: self.$name)
@@ -231,55 +248,59 @@ struct RecipeDetail: View {
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     Spacer()
                     Section(header: Text("Ingredients").font(.headline)) {
-                        if self.ingredients.count > 0 {
+                        if self.recipeDataObserver.ingredients.count > 0 {
                             VStack {
-                                ForEach(1..<self.ingredients.count, id: \.self) { index in
-                                    HStack {
-                                        Button(action: { self.ingredients.remove(at: index) }) {
-                                            Image(systemName: "minus.circle.fill")
-                                                .foregroundColor(Color(UIColor.systemRed))
+                                ForEach(0..<self.recipeDataObserver.ingredients.count, id: \.self) { index in
+                                    VStack {
+                                        HStack {
+                                            Button(action: { self.recipeDataObserver.ingredients.remove(at: index) }) {
+                                                Image(systemName: "minus.circle.fill")
+                                                    .foregroundColor(Color(UIColor.systemRed))
+                                            }
+                                            .padding(.trailing, 8)
+                                            RecipeIngredientListItem(ingredient: self.recipeDataObserver.ingredients[index])
                                         }
-                                        RecipeIngredientListItem(ingredient: self.ingredients[index])
-                                            .padding(.all, 8)
-                                        Image(systemName: "line.horizontal.3")
-                                            .foregroundColor(Color.secondary)
-                                            .padding(.leading, 8)
+                                        .padding([.leading, .trailing], 16)
+                                        Divider()
                                     }
-                                    .padding(.all, 8)
-                                    .background(index % 2 != 0 ? Color(UIColor.lightBeige) : Color(UIColor.darkBeige))
+                                    .padding(.top, 2)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .cornerRadius(8)
-                                    .rotationEffect(.degrees(Double(self.ingredientsOffset.width / 5)))
-                                    .offset(x: self.ingredientsOffset.width, y: self.ingredientsOffset.height)
-                                    .gesture(
-                                        DragGesture()
-                                            .onChanged { gesture in
-                                                self.ingredientsOffset = gesture.translation
-                                            }
-
-                                            .onEnded { _ in
-                                                self.ingredientsOffset = .zero
-                                            }
-                                    )
                                 }
                             }
                             .frame(maxWidth: .infinity)
+                            .cornerRadius(8)
                         } else {
                             Text("No ingredients for this recipe")
                                 .foregroundColor(.secondary)
                         }
+                        Button(action: { print("Tapped add ingredient") }) {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add Ingredient")
+                                .bold()
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.all, 16)
+                        .foregroundColor(Color.accentColor)
+                        .background(Color(UIColor.secondarySystemFill))
+                        .cornerRadius(8)
                     }
-                        .padding([.top, .bottom], 8)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .padding([.top, .bottom], 8)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
                     Spacer()
                     Section(header: Text("Directions").font(.headline)) {
-                        if self.recipe.directions.count > 0 {
+                        Button("Edit Directions") {
+                            self.showingDirectionsEditor = true
+                        }.sheet(isPresented: $showingDirectionsEditor, content: {
+                            RecipeEditDirections(recipeDataObserver: self.recipeDataObserver, editMode: self.$editMode)
+                        })
+                        if self.recipeDataObserver.directions.count > 0 {
                             VStack {
-                                ForEach(1..<self.recipe.directions.count, id: \.self) { index in
-                                    RecipeDirectionListItem(index: index, direction: self.recipe.directions[index])
-                                    .padding(.all, 8)
+                                ForEach(0..<self.recipeDataObserver.directions.count, id: \.self) { index in
+                                    RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.directions[index])
+                                        .padding(.all, 16)
                                         .frame(maxWidth: .infinity, alignment: .leading)
-                                        .background(index % 2 != 0 ? Color(UIColor.lightBlue) : Color(UIColor.systemBackground))
+                                        .background(index % 2 == 0 ? Color(UIColor.lightBlue) : Color(UIColor.secondarySystemFill))
+                                        .cornerRadius(8)
                                 }
                             }
                             .frame(maxWidth: .infinity)
@@ -287,15 +308,19 @@ struct RecipeDetail: View {
                             Text("No directions for this recipe")
                                 .foregroundColor(.secondary)
                         }
+                        Button(action: { print("Tapped add direction") }) {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add Direction")
+                                .bold()
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.all, 16)
+                        .foregroundColor(Color.accentColor)
+                        .background(Color(UIColor.secondarySystemFill))
+                        .cornerRadius(8)
                     }
-                        .padding([.top, .bottom], 8)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
-                    Section {
-                        Text("Voila").font(.title)
-                    }
-                    .padding(.top, 16)
-                    .padding(.bottom, 32)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding([.top, .bottom], 8)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
                 }
             )
         case .transient:
@@ -312,8 +337,18 @@ struct RecipeDetail: View {
     }
 }
 
+class RecipeDataObserver: ObservableObject {
+    @Published var ingredients: [RecipeIngredient]
+    @Published var directions: [String]
+    
+    init(ingredients: [RecipeIngredient]? = [], directions: [String]? = []) {
+        self.ingredients = ingredients!
+        self.directions = directions!
+    }
+}
+
 struct RecipeDetail_Previews: PreviewProvider {
     static var previews: some View {
-        RecipeDetail(recipe: recipe1)
+        RecipeDetail(recipe: recipe1, editMode: .inactive)
     }
 }

@@ -10,18 +10,31 @@ import Combine
 import SwiftUI
 
 final class UserData: ObservableObject {
-    @Published var recipes: [Recipe] = sampleRecipes
+    @Published var recipes: Dictionary<String, Recipe> = UserData.indexRecipes(recipes: sampleRecipes)
     
     func getRecipe(id: String) -> Recipe? {
-        let result = recipes.filter { $0.id == id }
-        if result.count == 0 {
-            return nil
-        }
-        return result.first
+        return recipes[id]
+    }
+    
+    func getRecipes() -> [Recipe] {
+        return recipes.compactMap({ $0.value })
     }
     
     func setRecipe(recipe: Recipe) {
-        recipes.removeAll(where: { $0.id == recipe.id })
-        recipes.append(recipe)
+        recipes[recipe.id] = recipe
+    }
+    
+    func removeRecipe(id: String) {
+        if recipes.keys.contains(where: { $0 == id }) {
+            recipes.removeValue(forKey: id)
+        }
+    }
+    
+    static func indexRecipes(recipes: [Recipe]) -> Dictionary<String, Recipe> {
+        var recipeIndex: Dictionary<String, Recipe> = Dictionary<String, Recipe>()
+        recipes.forEach { recipe in
+            recipeIndex[recipe.id] = recipe
+        }
+        return recipeIndex
     }
 }
