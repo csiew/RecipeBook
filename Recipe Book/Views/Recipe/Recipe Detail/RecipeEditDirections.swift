@@ -15,19 +15,28 @@ struct RecipeEditDirections: View {
     @State var showAddDirectionModal: Bool = false
     
     var body: some View {
-        List {
-            ForEach(0..<recipeDataObserver.directions.count, id: \.self) { index in
-                RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.directions[index])
-                    .padding(.all, 16)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        Group {
+            if self.recipeDataObserver.directions.count == 0 {
+                Text("No directions for this recipe")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            } else {
+                List {
+                    ForEach(0..<recipeDataObserver.directions.count, id: \.self) { index in
+                        RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.directions[index])
+                            .padding(.all, 16)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .onMove(perform: { (offsets, targetOffset) in
+                        self.recipeDataObserver.directions.move(fromOffsets: offsets, toOffset: targetOffset)
+                    })
+                    .onDelete(perform: { offsets in
+                        self.recipeDataObserver.directions.remove(atOffsets: offsets)
+                    })
+                }
             }
-            .onMove(perform: { (offsets, targetOffset) in
-                self.recipeDataObserver.directions.move(fromOffsets: offsets, toOffset: targetOffset)
-            })
-            .onDelete(perform: { offsets in
-                self.recipeDataObserver.directions.remove(atOffsets: offsets)
-            })
         }
+        .background(Color(UIColor.secondarySystemBackground))
         .navigationBarTitle("Directions", displayMode: .inline)
         .navigationBarItems(
             trailing:

@@ -29,6 +29,7 @@ struct RecipeDetail: View {
     // Flags
     @State var isNewRecipe: Bool? = false
     @State var showingIsModifiedAlert: Bool = false
+    @State var showAddIngredientModal: Bool = false
     @State var showAddDirectionModal: Bool = false
     
     var body: some View {
@@ -248,74 +249,13 @@ struct RecipeDetail: View {
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     Spacer()
                     Section(header: Text("Ingredients").font(.headline)) {
-                        if self.recipeDataObserver.ingredients.count > 0 {
-                            VStack {
-                                ForEach(0..<self.recipeDataObserver.ingredients.count, id: \.self) { index in
-                                    VStack {
-                                        HStack {
-                                            Button(action: { self.recipeDataObserver.ingredients.remove(at: index) }) {
-                                                Image(systemName: "minus.circle.fill")
-                                                    .foregroundColor(Color(UIColor.systemRed))
-                                            }
-                                            .padding(.trailing, 8)
-                                            RecipeIngredientListItem(ingredient: self.recipeDataObserver.ingredients[index])
-                                        }
-                                        .padding([.leading, .trailing], 16)
-                                        Divider()
-                                    }
-                                    .padding(.top, 2)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
-                            .cornerRadius(8)
-                        } else {
-                            Text("No ingredients for this recipe")
-                                .foregroundColor(.secondary)
-                        }
-                        Button(action: { print("Tapped add ingredient") }) {
-                            Image(systemName: "plus.circle.fill")
-                            Text("Add Ingredient")
-                                .bold()
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.all, 16)
-                        .foregroundColor(Color.accentColor)
-                        .background(Color(UIColor.secondarySystemFill))
-                        .cornerRadius(8)
+                        NavigationLink("Edit Ingredients", destination: RecipeEditIngredients(recipeDataObserver: self.recipeDataObserver, editMode: self.$editMode))
                     }
                     .padding([.top, .bottom], 8)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     Spacer()
                     Section(header: Text("Directions").font(.headline)) {
                         NavigationLink("Edit Directions", destination: RecipeEditDirections(recipeDataObserver: self.recipeDataObserver, editMode: self.$editMode))
-                        if self.recipeDataObserver.directions.count > 0 {
-                            VStack {
-                                ForEach(0..<self.recipeDataObserver.directions.count, id: \.self) { index in
-                                    RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.directions[index])
-                                        .padding(.all, 16)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .background(Color(UIColor.lightBeige))
-                                        .cornerRadius(8)
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
-                        } else {
-                            Text("No directions for this recipe")
-                                .foregroundColor(.secondary)
-                        }
-                        Button(action: { self.showAddDirectionModal = true }) {
-                            Image(systemName: "plus.circle.fill")
-                            Text("Add Direction")
-                                .bold()
-                        }.sheet(isPresented: $showAddDirectionModal, content: {
-                            AddRecipeDirectionModal(recipeDataObserver: self.recipeDataObserver)
-                        })
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.all, 16)
-                        .foregroundColor(Color.accentColor)
-                        .background(Color(UIColor.secondarySystemFill))
-                        .cornerRadius(8)
                     }
                     .padding([.top, .bottom], 8)
                     .frame(maxWidth: .infinity, alignment: .topLeading)

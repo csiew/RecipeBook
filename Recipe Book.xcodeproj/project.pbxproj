@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11058977248E90B900B5DB6D /* RecipeEditIngredients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11058976248E90B900B5DB6D /* RecipeEditIngredients.swift */; };
 		1116EA0D24877E6D00B1F509 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA0C24877E6D00B1F509 /* SettingsView.swift */; };
 		1116EA1024877F7800B1F509 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA0F24877F7800B1F509 /* GeneralSettingsView.swift */; };
 		1116EA1224877FA500B1F509 /* AppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA1124877FA500B1F509 /* AppearanceSettingsView.swift */; };
@@ -87,6 +88,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		11058976248E90B900B5DB6D /* RecipeEditIngredients.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeEditIngredients.swift; sourceTree = "<group>"; };
 		1116EA0C24877E6D00B1F509 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		1116EA0F24877F7800B1F509 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		1116EA1124877FA500B1F509 /* AppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsView.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 				1116EA262487A21000B1F509 /* RecipeIngredientListItem.swift */,
 				1116EA282487A2E800B1F509 /* RecipeDirectionListItem.swift */,
 				11F6B06E248D3DE6001E095D /* RecipeEditDirections.swift */,
+				11058976248E90B900B5DB6D /* RecipeEditIngredients.swift */,
 			);
 			path = "Recipe Detail";
 			sourceTree = "<group>";
@@ -607,6 +610,7 @@
 				118E7FA22486BC9C00D7D4A3 /* RecipeDetail.swift in Sources */,
 				119629012487E4EB000AACF8 /* ThemeSettingsView.swift in Sources */,
 				118E7F9E2486B88500D7D4A3 /* UserData.swift in Sources */,
+				11058977248E90B900B5DB6D /* RecipeEditIngredients.swift in Sources */,
 				11D74BB72487536200D8355E /* RecipeList.swift in Sources */,
 				115EDBD324894C97000A45C9 /* EditMode.swift in Sources */,
 				118E7F642486B3B900D7D4A3 /* SceneDelegate.swift in Sources */,
