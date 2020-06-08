@@ -12,39 +12,70 @@ struct RecipeEditDirections: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var recipeDataObserver: RecipeDataObserver
     @Binding var editMode: EditMode
+    @State var showAddDirectionModal: Bool = false
+    
+    var body: some View {
+        List {
+            ForEach(0..<recipeDataObserver.directions.count, id: \.self) { index in
+                RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.directions[index])
+                    .padding(.all, 16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .onMove(perform: { (offsets, targetOffset) in
+                self.recipeDataObserver.directions.move(fromOffsets: offsets, toOffset: targetOffset)
+            })
+            .onDelete(perform: { offsets in
+                self.recipeDataObserver.directions.remove(atOffsets: offsets)
+            })
+        }
+        .navigationBarTitle("Directions", displayMode: .inline)
+        .navigationBarItems(
+            trailing:
+                HStack {
+                    Button(action: { self.showAddDirectionModal = true }) {
+                        Image(systemName: "plus")
+                    }.sheet(isPresented: $showAddDirectionModal, content: {
+                        AddRecipeDirectionModal(recipeDataObserver: self.recipeDataObserver)
+                    })
+                }
+        )
+        .environment(\.editMode, self.$editMode)
+    }
+}
+
+struct AddRecipeDirectionModal: View {
+    @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var recipeDataObserver: RecipeDataObserver
+    @State var directionText: String = ""
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(0..<recipeDataObserver.directions.count, id: \.self) { index in
-                    RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.directions[index])
-                        .padding(.all, 16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(index % 2 == 0 ? Color(UIColor.lightBlue) : Color(UIColor.secondarySystemFill))
-                        .cornerRadius(8)
-                }
-                .onMove(perform: { (offsets, targetOffset) in
-                    self.recipeDataObserver.directions.move(fromOffsets: offsets, toOffset: targetOffset)
-                })
-                .onDelete(perform: { offsets in
-                    self.recipeDataObserver.directions.remove(atOffsets: offsets)
-                })
-            }
-            .navigationBarTitle("Directions", displayMode: .inline)
-            .navigationBarItems(
-                leading:
-                    HStack {
-                        Button("Close", action: { self.presentationMode.wrappedValue.dismiss() })
-                    },
-                trailing:
-                    HStack {
-                        Button(action: { print("Add direction button pressed") }) {
-                            Image(systemName: "plus")
+            MultilineTextField(text: self.$directionText, isFirstResponder: true)
+                .font(.body)
+                .padding(.all, 8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .navigationBarTitle("Add Direction", displayMode: .inline)
+                .navigationBarItems(
+                    leading:
+                        HStack {
+                            Button("Cancel", action: { self.presentationMode.wrappedValue.dismiss() })
+                        },
+                    trailing:
+                        HStack {
+                            Button(action: {
+                                self.addDirection(text: self.directionText)
+                                self.presentationMode.wrappedValue.dismiss()
+                            }) {
+                                Text("Done").bold()
+                            }
+                            .disabled(self.directionText.isEmpty)
                         }
-                    }
-            )
-            .environment(\.editMode, self.$editMode)
+                    )
         }
+    }
+    
+    func addDirection(text: String) {
+        self.recipeDataObserver.directions.append(text)
     }
 }
 

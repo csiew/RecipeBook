@@ -74,6 +74,7 @@ struct RecipeList: View {
                         ]
                     )
                 }
+                .padding(.trailing, 8)
                 NavigationLink(destination: RecipeDetail(recipe: Recipe(), editMode: .active, isNewRecipe: true)) {
                     Image(systemName: "plus")
                 }

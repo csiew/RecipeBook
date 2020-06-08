@@ -16,18 +16,18 @@ struct RecipeDirectionListItem: View {
         VStack {
             HStack {
                 Circle()
-                .foregroundColor(Color.red)
-                .overlay(
-                    Circle()
-                        .strokeBorder(Color.red, lineWidth: 1)
-                )
-                .overlay(
-                    Text("\(index+1)")
-                        .bold()
-                        .foregroundColor(.white)
-                )
-                .frame(minWidth: 32, maxWidth: 32, idealHeight: 32)
-                .fixedSize()
+                    .fill(Color.primary)
+                    .overlay(
+                        Circle()
+                            .strokeBorder(Color.primary, lineWidth: 1)
+                    )
+                    .overlay(
+                        Text("\(index+1)")
+                            .fontWeight(.heavy)
+                            .foregroundColor(Color(UIColor.systemBackground))
+                    )
+                    .frame(idealWidth: 32, maxWidth: 32, idealHeight: 32)
+                    .fixedSize()
             }
             .padding(.bottom, 8)
             Text(direction)

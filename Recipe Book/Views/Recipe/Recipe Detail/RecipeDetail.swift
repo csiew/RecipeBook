@@ -29,7 +29,7 @@ struct RecipeDetail: View {
     // Flags
     @State var isNewRecipe: Bool? = false
     @State var showingIsModifiedAlert: Bool = false
-    @State var showingDirectionsEditor: Bool = false
+    @State var showAddDirectionModal: Bool = false
     
     var body: some View {
         GeometryReader { reader in
@@ -196,7 +196,7 @@ struct RecipeDetail: View {
                                     RecipeDirectionListItem(index: index, direction: self.recipe.directions[index])
                                         .padding(.all, 16)
                                         .frame(maxWidth: .infinity, alignment: .top)
-                                        .background(index % 2 == 0 ? Color(UIColor.lightBlue) : Color(UIColor.secondarySystemFill))
+                                        .background(Color(UIColor.lightBeige))
                                         .cornerRadius(8)
                                 }
                             }
@@ -288,18 +288,14 @@ struct RecipeDetail: View {
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     Spacer()
                     Section(header: Text("Directions").font(.headline)) {
-                        Button("Edit Directions") {
-                            self.showingDirectionsEditor = true
-                        }.sheet(isPresented: $showingDirectionsEditor, content: {
-                            RecipeEditDirections(recipeDataObserver: self.recipeDataObserver, editMode: self.$editMode)
-                        })
+                        NavigationLink("Edit Directions", destination: RecipeEditDirections(recipeDataObserver: self.recipeDataObserver, editMode: self.$editMode))
                         if self.recipeDataObserver.directions.count > 0 {
                             VStack {
                                 ForEach(0..<self.recipeDataObserver.directions.count, id: \.self) { index in
                                     RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.directions[index])
                                         .padding(.all, 16)
                                         .frame(maxWidth: .infinity, alignment: .leading)
-                                        .background(index % 2 == 0 ? Color(UIColor.lightBlue) : Color(UIColor.secondarySystemFill))
+                                        .background(Color(UIColor.lightBeige))
                                         .cornerRadius(8)
                                 }
                             }
@@ -308,11 +304,13 @@ struct RecipeDetail: View {
                             Text("No directions for this recipe")
                                 .foregroundColor(.secondary)
                         }
-                        Button(action: { print("Tapped add direction") }) {
+                        Button(action: { self.showAddDirectionModal = true }) {
                             Image(systemName: "plus.circle.fill")
                             Text("Add Direction")
                                 .bold()
-                        }
+                        }.sheet(isPresented: $showAddDirectionModal, content: {
+                            AddRecipeDirectionModal(recipeDataObserver: self.recipeDataObserver)
+                        })
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.all, 16)
                         .foregroundColor(Color.accentColor)
