@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11003591248FD182006AE78A /* RecipeCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11003590248FD182006AE78A /* RecipeCollection.swift */; };
 		11058977248E90B900B5DB6D /* RecipeEditIngredients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11058976248E90B900B5DB6D /* RecipeEditIngredients.swift */; };
+		11058979248FBB1C00B5DB6D /* TimeDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11058978248FBB1C00B5DB6D /* TimeDetection.swift */; };
+		1105897B248FCA5500B5DB6D /* TimeDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1105897A248FCA5500B5DB6D /* TimeDisplayView.swift */; };
 		1116EA0D24877E6D00B1F509 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA0C24877E6D00B1F509 /* SettingsView.swift */; };
 		1116EA1024877F7800B1F509 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA0F24877F7800B1F509 /* GeneralSettingsView.swift */; };
 		1116EA1224877FA500B1F509 /* AppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1116EA1124877FA500B1F509 /* AppearanceSettingsView.swift */; };
@@ -88,7 +91,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		11003590248FD182006AE78A /* RecipeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCollection.swift; sourceTree = "<group>"; };
 		11058976248E90B900B5DB6D /* RecipeEditIngredients.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeEditIngredients.swift; sourceTree = "<group>"; };
+		11058978248FBB1C00B5DB6D /* TimeDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDetection.swift; sourceTree = "<group>"; };
+		1105897A248FCA5500B5DB6D /* TimeDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDisplayView.swift; sourceTree = "<group>"; };
 		1116EA0C24877E6D00B1F509 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		1116EA0F24877F7800B1F509 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		1116EA1124877FA500B1F509 /* AppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsView.swift; sourceTree = "<group>"; };
@@ -210,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				115EDBD6248A0CB0000A45C9 /* ArrayComparison.swift */,
+				11058978248FBB1C00B5DB6D /* TimeDetection.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -349,6 +356,7 @@
 				1116EA1F2487888800B1F509 /* GenreListDetail.swift */,
 				115EDBCE2489251F000A45C9 /* TextFieldWithLabel.swift */,
 				115EDBD024892CAA000A45C9 /* MultilineTextField.swift */,
+				1105897A248FCA5500B5DB6D /* TimeDisplayView.swift */,
 			);
 			path = "Component Views";
 			sourceTree = "<group>";
@@ -422,6 +430,7 @@
 				1116EA172487814700B1F509 /* Genre.swift */,
 				118E7F982486B53200D7D4A3 /* Recipe.swift */,
 				1116EA2324878B9700B1F509 /* RecipeIngredient.swift */,
+				11003590248FD182006AE78A /* RecipeCollection.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -591,6 +600,7 @@
 				1116EA1E248787D000B1F509 /* CuisineListDetail.swift in Sources */,
 				11F6B06F248D3DE6001E095D /* RecipeEditDirections.swift in Sources */,
 				11D74BBD248754EA00D8355E /* CategoryData.swift in Sources */,
+				11058979248FBB1C00B5DB6D /* TimeDetection.swift in Sources */,
 				1116EA1024877F7800B1F509 /* GeneralSettingsView.swift in Sources */,
 				1116EA182487814700B1F509 /* Genre.swift in Sources */,
 				115EDBD7248A0CB0000A45C9 /* ArrayComparison.swift in Sources */,
@@ -600,6 +610,7 @@
 				115EDBCF2489251F000A45C9 /* TextFieldWithLabel.swift in Sources */,
 				118E7F992486B53200D7D4A3 /* Recipe.swift in Sources */,
 				11D74BBF2487552C00D8355E /* SampleCuisines.swift in Sources */,
+				11003591248FD182006AE78A /* RecipeCollection.swift in Sources */,
 				1116EA2424878B9700B1F509 /* RecipeIngredient.swift in Sources */,
 				1116EA0D24877E6D00B1F509 /* SettingsView.swift in Sources */,
 				1116EA1624877FCF00B1F509 /* AccountSettingsView.swift in Sources */,
@@ -625,6 +636,7 @@
 				118E7F692486B3B900D7D4A3 /* ContentView.swift in Sources */,
 				1196292E2488F33C000AACF8 /* PantryView.swift in Sources */,
 				1116EA1C248781DF00B1F509 /* SampleGenres.swift in Sources */,
+				1105897B248FCA5500B5DB6D /* TimeDisplayView.swift in Sources */,
 				118E7F672486B3B900D7D4A3 /* Recipe_Book.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

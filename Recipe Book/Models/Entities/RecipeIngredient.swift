@@ -17,7 +17,7 @@ enum MeasurementUnit: CaseIterable {
     case piece, stick, block, pinch, quarts
 }
 
-class MeasurementUnitSupplemental {
+final class MeasurementUnitSupplemental {
     static let unitDictionary: Dictionary<MeasurementUnit, String> = MeasurementUnitSupplemental.getAllUnits()
     
     static func getShortDescription(unit: MeasurementUnit) -> String {

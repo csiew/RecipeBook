@@ -11,6 +11,7 @@ import SwiftUI
 
 final class UserSettings: ObservableObject {
     // Modifiable settings
+    @Published var allowEstimateDuration: Bool = true
     @Published var listsAreGrouped: Bool = true
     @Published var theme: ColorScheme = Environment(\.colorScheme).wrappedValue
     @Published var chosenTheme: ColorSchemeSupplemental = .system

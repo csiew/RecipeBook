@@ -13,8 +13,8 @@ struct Cuisine: Identifiable {
     var name: String
     var description: String
     
-    init(id: String? = UUID().uuidString, name: String, description: String? = "") {
-        self.id = id!
+    init(id: String? = nil, name: String, description: String? = "") {
+        self.id = id ?? UUID().uuidString
         self.name = name
         self.description = description!
     }

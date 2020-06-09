@@ -49,6 +49,7 @@ struct ContentView: View {
                 }
                 .tag(3)
         }
+        .environment(\.font, self.userSettings.fontFamily)
         .environment(\.colorScheme, self.userSettings.theme)
         .preferredColorScheme(self.userSettings.theme)
     }

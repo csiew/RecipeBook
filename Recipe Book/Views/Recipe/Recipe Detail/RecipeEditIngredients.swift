@@ -9,11 +9,23 @@
 import SwiftUI
 import Combine
 
+class IngredientDraftBuffer: ObservableObject {
+    @Published var index: Int = 0
+    @Published var ingredient: RecipeIngredient?
+    
+    func reset() {
+        self.index = 0
+        self.ingredient = nil
+    }
+}
+
 struct RecipeEditIngredients: View {
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var ingredientDraftBuffer = IngredientDraftBuffer()
     @ObservedObject var recipeDataObserver: RecipeDataObserver
     @Binding var editMode: EditMode
     @State var showAddIngredientModal: Bool = false
+    @State var selectedItem: Int = 0
     
     var body: some View {
         Group {
@@ -26,12 +38,27 @@ struct RecipeEditIngredients: View {
                     ForEach(0..<recipeDataObserver.ingredients.count, id: \.self) { index in
                         RecipeIngredientListItem(ingredient: self.recipeDataObserver.ingredients[index])
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .onTapGesture(perform: {
+                                self.selectedItem = index
+                                self.showAddIngredientModal = true
+                            })
                     }
                     .onMove(perform: { (offsets, targetOffset) in
                         self.recipeDataObserver.ingredients.move(fromOffsets: offsets, toOffset: targetOffset)
                     })
                     .onDelete(perform: { offsets in
                         self.recipeDataObserver.ingredients.remove(atOffsets: offsets)
+                    })
+                    .sheet(isPresented: self.$showAddIngredientModal, content: {
+                        AddRecipeIngredientModal(
+                            ingredientDraftBuffer: self.ingredientDraftBuffer,
+                            recipeDataObserver: self.recipeDataObserver,
+                            description: self.recipeDataObserver.ingredients[self.selectedItem].name,
+                            quantity: self.recipeDataObserver.ingredients[self.selectedItem].quantity ?? 0,
+                            measurementUnit: self.recipeDataObserver.ingredients[self.selectedItem].unit,
+                            index: self.selectedItem,
+                            isExisting: true
+                        )
                     })
                 }
             }
@@ -44,7 +71,13 @@ struct RecipeEditIngredients: View {
                     Button(action: { self.showAddIngredientModal = true }) {
                         Image(systemName: "plus")
                     }.sheet(isPresented: $showAddIngredientModal, content: {
-                        AddRecipeIngredientModal(recipeDataObserver: self.recipeDataObserver)
+                        AddRecipeIngredientModal(
+                            ingredientDraftBuffer: self.ingredientDraftBuffer,
+                            recipeDataObserver: self.recipeDataObserver,
+                            description: "",
+                            quantity: 0,
+                            measurementUnit: .none
+                        )
                     })
                 }
         )
@@ -54,10 +87,13 @@ struct RecipeEditIngredients: View {
 
 struct AddRecipeIngredientModal: View {
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var ingredientDraftBuffer: IngredientDraftBuffer
     @ObservedObject var recipeDataObserver: RecipeDataObserver
-    @State var description: String = ""
-    @State var quantity: Int = 0
-    @State var measurementUnit: MeasurementUnit = .none
+    @State var description: String
+    @State var quantity: Int
+    @State var measurementUnit: MeasurementUnit
+    @State var index: Int = 0
+    @State var isExisting: Bool = false
     
     var body: some View {
         NavigationView {
@@ -92,7 +128,11 @@ struct AddRecipeIngredientModal: View {
                 trailing:
                     HStack {
                         Button(action: {
-                            self.addIngredient(text: self.description)
+                            if self.isExisting == false {
+                                self.addIngredient()
+                            } else {
+                                self.updateIngredient()
+                            }
                             self.presentationMode.wrappedValue.dismiss()
                         }) {
                             Text("Done").bold()
@@ -101,10 +141,21 @@ struct AddRecipeIngredientModal: View {
                     }
                 )
         }
+        .onDisappear(perform: {
+            if self.ingredientDraftBuffer.ingredient != nil {
+                self.recipeDataObserver.ingredients[self.index] = self.ingredientDraftBuffer.ingredient!
+                self.ingredientDraftBuffer.reset()
+            }
+        })
     }
     
-    func addIngredient(text: String) {
+    func addIngredient() {
         self.recipeDataObserver.ingredients.append(RecipeIngredient(id: nil, name: self.description, quantity: self.quantity == 0 ? nil : self.quantity, unit: measurementUnit))
+    }
+    
+    func updateIngredient() {
+        let id = self.recipeDataObserver.ingredients[self.index].id
+        self.ingredientDraftBuffer.ingredient = RecipeIngredient(id: id, name: self.description, quantity: self.quantity == 0 ? nil : self.quantity, unit: measurementUnit)
     }
 }
 

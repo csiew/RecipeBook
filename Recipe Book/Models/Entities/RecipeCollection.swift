@@ -1,14 +1,14 @@
 //
-//  Genre.swift
+//  RecipeCollection.swift
 //  Recipe Book
 //
-//  Created by Clarence Siew on 3/6/20.
+//  Created by Clarence Siew on 10/6/20.
 //  Copyright © 2020 Clarence Siew. All rights reserved.
 //
 
 import Foundation
 
-struct Genre: Identifiable {
+struct RecipeCollection: Identifiable {
     var id: String
     var name: String
     var description: String

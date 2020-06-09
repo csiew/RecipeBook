@@ -8,11 +8,23 @@
 
 import SwiftUI
 
+class DirectionDraftBuffer: ObservableObject {
+    @Published var index: Int = 0
+    @Published var direction: String?
+    
+    func reset() {
+        self.index = 0
+        self.direction = nil
+    }
+}
+
 struct RecipeEditDirections: View {
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var directionDraftBuffer = DirectionDraftBuffer()
     @ObservedObject var recipeDataObserver: RecipeDataObserver
     @Binding var editMode: EditMode
     @State var showAddDirectionModal: Bool = false
+    @State var selectedItem: Int = 0
     
     var body: some View {
         Group {
@@ -26,12 +38,25 @@ struct RecipeEditDirections: View {
                         RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.directions[index])
                             .padding(.all, 16)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .onTapGesture(perform: {
+                                self.selectedItem = index
+                                self.showAddDirectionModal = true
+                            })
                     }
                     .onMove(perform: { (offsets, targetOffset) in
                         self.recipeDataObserver.directions.move(fromOffsets: offsets, toOffset: targetOffset)
                     })
                     .onDelete(perform: { offsets in
                         self.recipeDataObserver.directions.remove(atOffsets: offsets)
+                    })
+                    .sheet(isPresented: self.$showAddDirectionModal, content: {
+                        AddRecipeDirectionModal(
+                            directionDraftBuffer: self.directionDraftBuffer,
+                            recipeDataObserver: self.recipeDataObserver,
+                            index: self.selectedItem,
+                            description: self.recipeDataObserver.directions[self.selectedItem],
+                            isExisting: true
+                        )
                     })
                 }
             }
@@ -44,7 +69,10 @@ struct RecipeEditDirections: View {
                     Button(action: { self.showAddDirectionModal = true }) {
                         Image(systemName: "plus")
                     }.sheet(isPresented: $showAddDirectionModal, content: {
-                        AddRecipeDirectionModal(recipeDataObserver: self.recipeDataObserver)
+                        AddRecipeDirectionModal(
+                            directionDraftBuffer: self.directionDraftBuffer,
+                            recipeDataObserver: self.recipeDataObserver
+                        )
                     })
                 }
         )
@@ -54,37 +82,73 @@ struct RecipeEditDirections: View {
 
 struct AddRecipeDirectionModal: View {
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var directionDraftBuffer: DirectionDraftBuffer
     @ObservedObject var recipeDataObserver: RecipeDataObserver
-    @State var directionText: String = ""
+    @State var index: Int = 0
+    @State var description: String = ""
+    @State var isExisting: Bool = false
     
     var body: some View {
         NavigationView {
-            MultilineTextField(text: self.$directionText, isFirstResponder: true)
-                .font(.body)
-                .padding(.all, 8)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .navigationBarTitle("Add Direction", displayMode: .inline)
-                .navigationBarItems(
-                    leading:
-                        HStack {
-                            Button("Cancel", action: { self.presentationMode.wrappedValue.dismiss() })
-                        },
-                    trailing:
-                        HStack {
-                            Button(action: {
-                                self.addDirection(text: self.directionText)
-                                self.presentationMode.wrappedValue.dismiss()
-                            }) {
-                                Text("Done").bold()
+            VStack {
+                HStack {
+                    Circle()
+                        .fill(Color.primary)
+                        .overlay(
+                            Circle()
+                                .strokeBorder(Color.primary, lineWidth: 1)
+                        )
+                        .overlay(
+                            Text("\(index+1)")
+                                .fontWeight(.heavy)
+                                .foregroundColor(Color(UIColor.systemBackground))
+                        )
+                        .frame(idealWidth: 32, maxWidth: 32, idealHeight: 32)
+                        .fixedSize()
+                }
+                .padding(.top, 16)
+                MultilineTextField(text: self.$description, isFirstResponder: true)
+                    .font(.body)
+                    .padding(.all, 8)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .navigationBarTitle("Add Direction", displayMode: .inline)
+                    .navigationBarItems(
+                        leading:
+                            HStack {
+                                Button("Cancel", action: { self.presentationMode.wrappedValue.dismiss() })
+                            },
+                        trailing:
+                            HStack {
+                                Button(action: {
+                                    if self.isExisting == false {
+                                        self.addDirection()
+                                    } else {
+                                        self.updateDirection()
+                                    }
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }) {
+                                    Text("Done").bold()
+                                }
+                                .disabled(self.description.isEmpty)
                             }
-                            .disabled(self.directionText.isEmpty)
-                        }
-                    )
+                        )
+            }
+            .onDisappear(perform: {
+                if self.directionDraftBuffer.direction != nil {
+                    self.recipeDataObserver.directions[self.index] = self.description
+                    self.directionDraftBuffer.reset()
+                }
+            })
         }
     }
     
-    func addDirection(text: String) {
-        self.recipeDataObserver.directions.append(text)
+    func addDirection() {
+        self.recipeDataObserver.directions.append(self.description)
+    }
+    
+    func updateDirection() {
+        self.directionDraftBuffer.index = self.index
+        self.directionDraftBuffer.direction = self.description
     }
 }
 

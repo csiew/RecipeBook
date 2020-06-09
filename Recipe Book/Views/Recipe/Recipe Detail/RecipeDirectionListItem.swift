@@ -10,7 +10,8 @@ import SwiftUI
 
 struct RecipeDirectionListItem: View {
     var index: Int
-    var direction: String
+    @State var direction: String
+    @State var isEditable: Bool = false
     
     var body: some View {
         VStack {

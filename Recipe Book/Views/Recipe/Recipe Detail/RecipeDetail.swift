@@ -13,6 +13,7 @@ struct RecipeDetail: View {
     // Observers
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var userData: UserData
+    @EnvironmentObject var userSettings: UserSettings
     @ObservedObject var recipeDataObserver = RecipeDataObserver()
     
     // View initialisers
@@ -110,8 +111,13 @@ struct RecipeDetail: View {
     
     func toggleEditMode() {
         if self.editMode == .active {
-            if self.isModified() == true {
-                self.recipe = self.saveRecipe()
+            if self.isNewRecipe == false {
+                if self.isModified() == true {
+                    self.recipe = self.saveRecipe()
+                }
+            } else {
+                let newRecipe = Recipe(id: nil, name: self.name, description: self.description, source: self.source, cuisineId: self.cuisineId, genreId: self.genreId, ingredients: self.recipeDataObserver.ingredients, directions: self.recipeDataObserver.directions)
+                self.userData.recipes[newRecipe.id] = newRecipe
             }
             self.editMode.toggle()
             if self.isNewRecipe == true {
@@ -150,6 +156,14 @@ struct RecipeDetail: View {
                         .padding([.top, .bottom], 8)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                     Spacer()
+                    if self.userSettings.allowEstimateDuration == true && self.recipe.directions.count > 0 {
+                        Section(header: Text("Estimated Time Required").font(.headline)) {
+                            TimeDisplayView(timeInSeconds: TimeDetection.batchDetect(textValues: self.recipe.directions))
+                        }
+                        .padding([.top, .bottom], 8)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        Spacer()
+                    }
                     if self.recipe.description != "" {
                         Section(header: Text("Description").font(.headline)) {
                                 Text(self.recipe.description)
@@ -249,13 +263,35 @@ struct RecipeDetail: View {
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     Spacer()
                     Section(header: Text("Ingredients").font(.headline)) {
-                        NavigationLink("Edit Ingredients", destination: RecipeEditIngredients(recipeDataObserver: self.recipeDataObserver, editMode: self.$editMode))
+                        NavigationLink(destination: RecipeEditIngredients(recipeDataObserver: self.recipeDataObserver, editMode: self.$editMode)) {
+                            HStack {
+                                Image(systemName: "pencil")
+                                Text("Edit Ingredients").bold()
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.all, 16)
+                        .background(Color.accentColor)
+                        .foregroundColor(Color(UIColor.systemBackground))
+                        .cornerRadius(8)
+                        .padding(.bottom, 8)
                     }
                     .padding([.top, .bottom], 8)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     Spacer()
                     Section(header: Text("Directions").font(.headline)) {
-                        NavigationLink("Edit Directions", destination: RecipeEditDirections(recipeDataObserver: self.recipeDataObserver, editMode: self.$editMode))
+                        NavigationLink(destination: RecipeEditDirections(recipeDataObserver: self.recipeDataObserver, editMode: self.$editMode)) {
+                            HStack {
+                                Image(systemName: "pencil")
+                                Text("Edit Directions").bold()
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.all, 16)
+                        .background(Color.accentColor)
+                        .foregroundColor(Color(UIColor.systemBackground))
+                        .cornerRadius(8)
+                        .padding(.bottom, 8)
                     }
                     .padding([.top, .bottom], 8)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
