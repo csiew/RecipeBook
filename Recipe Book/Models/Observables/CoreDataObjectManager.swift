@@ -25,6 +25,7 @@ final class CoreDataObjectManager: ObservableObject {
     }
     
     func loadData() {
+        print("Object manager is loading data...")
         self.fetchRecipes()
     }
     
@@ -40,7 +41,7 @@ final class CoreDataObjectManager: ObservableObject {
         }
     }
     
-    func addRecipe(id: String? = nil, name: String? = "", description: String? = "", source: String? = "", ingredients: Set<Ingredient>? = Set<Ingredient>(), directions: [String]? = Array()) -> Recipe {
+    func addRecipe(id: String? = nil, name: String? = "", description: String? = "", source: String? = "", ingredients: Set<Ingredient>? = Set<Ingredient>(), directions: [String]? = Array(), date: Date? = Date()) -> Recipe {
         let recipe = NSEntityDescription.insertNewObject(forEntityName: "Recipe", into: managedObjectContext) as! Recipe
         recipe.id = id ?? UUID().uuidString
         recipe.name = name!
@@ -48,14 +49,20 @@ final class CoreDataObjectManager: ObservableObject {
         recipe.source = source!
         recipe.ingredients = ingredients!
         recipe.directions = directions!
+        recipe.dateCreated = date!
         
         self.save()
         
         return recipe
     }
     
+    func deleteRecipe(recipe: Recipe) {
+        self.managedObjectContext.delete(recipe)
+        self.save()
+    }
+    
     func fetchRecipes() {
-        var results = [Recipe]()
+        var results = Array<Recipe>()
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Recipe")
         request.returnsObjectsAsFaults = false
         
@@ -65,7 +72,7 @@ final class CoreDataObjectManager: ObservableObject {
         } catch {
             print("Failed to fetch recipes: \(error)")
         }
-        
+        print("Result count: ", results.count)
         self.recipes = results
     }
     
@@ -119,6 +126,15 @@ final class CoreDataObjectManager: ObservableObject {
         for type in TypeCatalogue.allCases {
             let entity = type.rawValue
             let request = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+            
+            do {
+                _ = try managedObjectContext.execute(deleteRequest)
+            } catch let error {
+                print("Error: Unable to flush \(entity): \(error)")
+            }
+            
+            /*
             request.returnsObjectsAsFaults = false
             
             do {
@@ -130,6 +146,8 @@ final class CoreDataObjectManager: ObservableObject {
             } catch let error {
                 print("Error: Unable to flush \(entity): \(error)")
             }
+             */
         }
+        self.loadData()
     }
 }

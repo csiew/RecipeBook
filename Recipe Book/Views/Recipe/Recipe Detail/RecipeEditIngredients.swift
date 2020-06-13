@@ -75,6 +75,14 @@ struct RecipeEditIngredients: View {
                     Button(action: { self.showAddIngredientModal = true }) {
                         Image(systemName: "plus")
                     }
+                    .sheet(isPresented: self.$showAddIngredientModal, content: {
+                        AddRecipeIngredientModal(
+                            ingredientDraftBuffer: self.ingredientDraftBuffer,
+                            recipeDataObserver: self.recipeDataObserver,
+                            recipe: self.$recipe
+                        )
+                        .environmentObject(self.objectManager)
+                    })
                 }
         )
         .environment(\.editMode, self.$editMode)

@@ -42,16 +42,39 @@ struct RecipeDetail: View {
             }
             .navigationBarTitle("Recipe")
             .navigationBarBackButtonHidden(self.editMode == .active)
-            .navigationBarItems(trailing:
-                HStack {
-                    Button(action: { self.toggleEditMode() }) {
-                        if self.editMode == .inactive {
-                            Text(self.editMode.title)
-                        } else {
-                            Text(self.editMode.title).bold()
+            .navigationBarItems(
+                leading:
+                    HStack {
+                        if self.isNewRecipe == true {
+                            Button("Cancel") {
+                                if self.isModified() == true {
+                                    self.showingIsModifiedAlert = true
+                                } else {
+                                    self.discard()
+                                }
+                            }
+                            .alert(isPresented: self.$showingIsModifiedAlert) {
+                                Alert(
+                                    title: Text("Add Recipe"),
+                                    message: Text("It looks like you had something going. Are you sure you want to cancel creating your new recipe?"),
+                                    primaryButton: .destructive(Text("Yes").bold(), action: {
+                                        self.discard()
+                                    }),
+                                    secondaryButton: .default(Text("Continue Editing"))
+                                )
+                            }
+                        }
+                    },
+                trailing:
+                    HStack {
+                        Button(action: { self.toggleEditMode() }) {
+                            if self.editMode == .inactive {
+                                Text(self.editMode.title)
+                            } else {
+                                Text(self.editMode.title).bold()
+                            }
                         }
                     }
-                }
             )
             .environment(\.editMode, self.$editMode)
             .onAppear(perform: {
@@ -62,6 +85,12 @@ struct RecipeDetail: View {
                 }
             })
         }
+    }
+    
+    func discard() {
+        self.objectManager.managedObjectContext.delete(self.recipe!)
+        self.objectManager.save()
+        self.presentationMode.wrappedValue.dismiss()
     }
     
     func isModified() -> Bool {
@@ -147,10 +176,17 @@ struct RecipeDetail: View {
             //MARK: - Read-only view
             return AnyView(
                 VStack {
-                    Text(self.recipe!.name)
-                        .font(.title)
-                        .padding([.top, .bottom], 8)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                    Group {
+                        Text(self.recipe!.name)
+                            .font(.title)
+                            .padding([.top, .bottom], 8)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                        Text(TimestampUtil.dateToString(date: self.recipe!.dateCreated, style: .casualLong))
+                            .font(.caption)
+                            .foregroundColor(Color.secondary)
+                            .padding(.bottom, 8)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                    }
                     Spacer()
                     if self.userSettings.allowEstimateDuration == true && self.recipe!.directions.count > 0 {
                         Section(header: Text("Estimated Time Required").font(.headline)) {

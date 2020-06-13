@@ -18,28 +18,11 @@ struct ContentView: View {
             HomeView()
                 .tabItem {
                     VStack {
-                        Image(systemName: "house")
-                        Text("Home")
+                        Image(systemName: "list.bullet")
+                        Text("Recipes")
                     }
                 }
                 .tag(0)
-            PantryView()
-                .tabItem {
-                    VStack {
-                        Image(systemName: "cube.box")
-                        Text("Pantry")
-                    }
-                }
-                .tag(1)
-            Text("Salon")
-                .font(.title)
-                .tabItem {
-                    VStack {
-                        Image(systemName: "bubble.left.and.bubble.right")
-                        Text("Salon")
-                    }
-                }
-                .tag(2)
             SettingsView()
                 .tabItem {
                     VStack {
@@ -47,7 +30,7 @@ struct ContentView: View {
                         Text("Settings")
                     }
                 }
-                .tag(3)
+                .tag(1)
         }
         .environment(\.font, self.userSettings.fontFamily)
         .environment(\.colorScheme, self.userSettings.theme)

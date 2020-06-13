@@ -9,7 +9,9 @@
 import SwiftUI
 
 enum RecipeSortingOption {
-    case none, ascending, descending
+    case none
+    case alphanumericAscending, alphanumericDescending
+    case dateAscending, dateDescending
 }
 
 struct RecipeGroup {
@@ -20,35 +22,60 @@ struct RecipeGroup {
 struct RecipeList: View {
     @EnvironmentObject var objectManager: CoreDataObjectManager
     @EnvironmentObject var userSettings: UserSettings
-    @State private var selectedRecipe: Int = 0
+    @State var editMode: EditMode = .inactive
     @State private var sortActionSheetVisible: Bool = false
-    @State private var sortingOption: RecipeSortingOption = .ascending
+    @State private var sortingOption: RecipeSortingOption = .alphanumericAscending
     
     func sortedRecipes(sort: RecipeSortingOption) -> [Recipe] {
+        print("Item count: ", objectManager.recipes.count)
         switch sort {
         case .none:
             return objectManager.recipes.compactMap({ $0 })
-        case .ascending:
+        case .alphanumericAscending:
             return objectManager.recipes.compactMap({ $0 }).sorted(by: { $0.name < $1.name })
-        case .descending:
+        case .alphanumericDescending:
             return objectManager.recipes.compactMap({ $0 }).sorted(by: { $0.name > $1.name })
+        case .dateAscending:
+            return objectManager.recipes.compactMap({ $0 }).sorted(by: { $0.dateCreated < $1.dateCreated })
+        case .dateDescending:
+            return objectManager.recipes.compactMap({ $0 }).sorted(by: { $0.dateCreated > $1.dateCreated })
         }
     }
     
     func sortedGroupedRecipes(sort: RecipeSortingOption) -> [RecipeGroup] {
         let preSortedRecipes = sortedRecipes(sort: sort)
-        let alphabetGroups = preSortedRecipes.compactMap { $0.name.first }
         var groups = Array<RecipeGroup>()
-        alphabetGroups.sorted(by: { $0 < $1 }).forEach { char in
-            groups.append(RecipeGroup(id: String(char), recipes: preSortedRecipes.filter { $0.name.first == char }))
+        if sort == .alphanumericAscending || sort == .alphanumericDescending {
+            let alphabetGroups = preSortedRecipes.compactMap { $0.name.first }
+            alphabetGroups.sorted(by: { $0 < $1 }).forEach { char in
+                groups.append(RecipeGroup(id: String(char), recipes: preSortedRecipes.filter { $0.name.first == char }))
+            }
+        } else if sort == .dateAscending || sort == .dateAscending {
+            let dateGroups = preSortedRecipes.compactMap { $0.dateCreated }
+            dateGroups.sorted(by: { $0 < $1 }).forEach { dateCreated in
+                groups.append(
+                    RecipeGroup(
+                        id: TimestampUtil.dateToString(date: dateCreated, style: .dateOnly),
+                        recipes: preSortedRecipes
+                            .filter {
+                                TimestampUtil
+                                    .dateToString(date: $0.dateCreated, style: .dateOnly) == TimestampUtil.dateToString(date: dateCreated, style: .dateOnly)
+                            }
+                    )
+                )
+            }
         }
         switch sort {
         case .none:
             return groups
-        case .ascending:
-            return groups.sorted { $0.id < $1.id }
-        case .descending:
-            return groups.sorted { $0.id > $1.id }
+        case .alphanumericAscending:
+            return groups.sorted(by: { $0.id < $1.id })
+        case .alphanumericDescending:
+            return groups.sorted(by: { $0.id > $1.id })
+        case .dateAscending:
+            return groups.sorted(by: { $0.id < $1.id })
+        case .dateDescending:
+            return groups.sorted(by: { $0.id > $1.id })
         }
     }
     
@@ -58,27 +85,45 @@ struct RecipeList: View {
         }
         .listStyle(PlainListStyle())
         .navigationBarTitle("Recipes", displayMode: .inline)
-        .navigationBarItems(trailing:
-            HStack {
-                Button(action: { self.sortActionSheetVisible.toggle() }) {
-                    Image(systemName: "arrow.up.arrow.down")
+        .navigationBarItems(
+            leading:
+                HStack {
+                    if self.editMode == .inactive {
+                        NavigationLink(destination: RecipeDetail(editMode: .active, isNewRecipe: true)) {
+                            Image(systemName: "plus")
+                        }
+                    }
+                },
+            trailing:
+                HStack {
+                    if self.editMode == .inactive {
+                        Button(action: { self.sortActionSheetVisible.toggle() }) {
+                            Image(systemName: "arrow.up.arrow.down")
+                        }
+                        .actionSheet(isPresented: $sortActionSheetVisible) {
+                            ActionSheet(
+                                title: Text("Sort by..."),
+                                buttons: [
+                                    .default(Text("Alphabetical (ascending)")) { self.sortingOption = .alphanumericAscending },
+                                    .default(Text("Alphabetical (descending)")) { self.sortingOption = .alphanumericDescending },
+                                    .default(Text("Date (ascending)")) { self.sortingOption = .dateAscending },
+                                    .default(Text("Date (descending)")) { self.sortingOption = .dateDescending },
+                                    .cancel()
+                                ]
+                            )
+                        }
+                        .padding(.trailing, 8)
+                    }
+                    Button(action: { self.editMode.toggle() }) {
+                        if self.editMode == .inactive {
+                            Text(self.editMode.title)
+                        } else {
+                            Text(self.editMode.title).bold()
+                        }
+                    }
                 }
-                .actionSheet(isPresented: $sortActionSheetVisible) {
-                    ActionSheet(
-                        title: Text("Sort by..."),
-                        buttons: [
-                            .default(Text("Ascending")) { self.sortingOption = .ascending },
-                            .default(Text("Descending")) { self.sortingOption = .descending },
-                            .cancel()
-                        ]
-                    )
-                }
-                .padding(.trailing, 8)
-                NavigationLink(destination: RecipeDetail(editMode: .active, isNewRecipe: true)) {
-                    Image(systemName: "plus")
-                }
-            }
         )
+        .environment(\.editMode, self.$editMode)
     }
     
     func recipeListView() -> AnyView {
@@ -96,6 +141,9 @@ struct RecipeList: View {
                         }
                     }
                 }
+                .onDelete(perform: { offsets in
+                    self.objectManager.recipes.remove(atOffsets: offsets)
+                })
             )
         case false:
             return AnyView(
@@ -106,6 +154,9 @@ struct RecipeList: View {
                         }
                     }
                 }
+                .onDelete(perform: { offsets in
+                    self.objectManager.recipes.remove(atOffsets: offsets)
+                })
             )
         }
     }

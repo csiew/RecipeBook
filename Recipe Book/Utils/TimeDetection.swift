@@ -56,25 +56,16 @@ final class TimeDetection {
         let minutes: [String] = TimeDetection.matches(for: minutesPattern, in: text)
         let seconds: [String] = TimeDetection.matches(for: secondsPattern, in: text)
         
-        print(days)
-        print(hours)
-        print(minutes)
-        print(seconds)
-        
         for value in days {
-            print(value.removeNonNumerical())
             totalSeconds += (Int(value.removeNonNumerical()) ?? 0) * 24 * 60 * 60
         }
         for value in hours {
-            print(value.removeNonNumerical())
             totalSeconds += (Int(value.removeNonNumerical()) ?? 0) * 60 * 60
         }
         for value in minutes {
-            print(value.removeNonNumerical())
             totalSeconds += (Int(value.removeNonNumerical()) ?? 0) * 60
         }
         for value in seconds {
-            print(value.removeNonNumerical())
             totalSeconds += (Int(value.removeNonNumerical()) ?? 0)
         }
         
