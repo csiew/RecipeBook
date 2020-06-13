@@ -100,17 +100,3 @@ struct RecipeAddView: View {
         return false
     }
 }
-
-struct RecipeAddView_Previews: PreviewProvider {
-    static var previews: some View {
-        RecipeAddView(
-            name: recipe1.name,
-            description: recipe1.description,
-            source: recipe1.source,
-            ingredients: recipe1.ingredients,
-            directions: recipe1.directions,
-            cuisineId: recipe1.cuisineId,
-            genreId: recipe1.genreId
-        )
-    }
-}

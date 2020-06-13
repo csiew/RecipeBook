@@ -11,7 +11,7 @@ import Combine
 
 class IngredientDraftBuffer: ObservableObject {
     @Published var index: Int = 0
-    @Published var ingredient: RecipeIngredient?
+    @Published var ingredient: Ingredient?
     
     func reset() {
         self.index = 0
@@ -21,11 +21,14 @@ class IngredientDraftBuffer: ObservableObject {
 
 struct RecipeEditIngredients: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var objectManager: CoreDataObjectManager
     @ObservedObject var ingredientDraftBuffer = IngredientDraftBuffer()
     @ObservedObject var recipeDataObserver: RecipeDataObserver
     @Binding var editMode: EditMode
+    @State var recipe: Recipe
+    @State var ingredient: Ingredient? = nil
     @State var showAddIngredientModal: Bool = false
-    @State var selectedItem: Int = 0
+    @State var selectedItem: Int? = nil
     
     var body: some View {
         Group {
@@ -35,7 +38,7 @@ struct RecipeEditIngredients: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else {
                 List {
-                    ForEach(0..<recipeDataObserver.ingredients.count, id: \.self) { index in
+                    ForEach(0..<self.recipeDataObserver.ingredients.count, id: \.self) { index in
                         RecipeIngredientListItem(ingredient: self.recipeDataObserver.ingredients[index])
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .onTapGesture(perform: {
@@ -53,12 +56,13 @@ struct RecipeEditIngredients: View {
                         AddRecipeIngredientModal(
                             ingredientDraftBuffer: self.ingredientDraftBuffer,
                             recipeDataObserver: self.recipeDataObserver,
-                            description: self.recipeDataObserver.ingredients[self.selectedItem].name,
-                            quantity: self.recipeDataObserver.ingredients[self.selectedItem].quantity ?? 0,
-                            measurementUnit: self.recipeDataObserver.ingredients[self.selectedItem].unit,
-                            index: self.selectedItem,
-                            isExisting: true
+                            recipe: self.$recipe,
+                            selectedItem: self.selectedItem
                         )
+                        .environmentObject(self.objectManager)
+                        .onDisappear(perform: {
+                            self.selectedItem = nil
+                        })
                     })
                 }
             }
@@ -70,30 +74,27 @@ struct RecipeEditIngredients: View {
                 HStack {
                     Button(action: { self.showAddIngredientModal = true }) {
                         Image(systemName: "plus")
-                    }.sheet(isPresented: $showAddIngredientModal, content: {
-                        AddRecipeIngredientModal(
-                            ingredientDraftBuffer: self.ingredientDraftBuffer,
-                            recipeDataObserver: self.recipeDataObserver,
-                            description: "",
-                            quantity: 0,
-                            measurementUnit: .none
-                        )
-                    })
+                    }
                 }
         )
         .environment(\.editMode, self.$editMode)
+        .onAppear(perform: {
+            print(self.recipeDataObserver.ingredients)
+        })
     }
 }
 
 struct AddRecipeIngredientModal: View {
-    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var objectManager: CoreDataObjectManager
     @ObservedObject var ingredientDraftBuffer: IngredientDraftBuffer
     @ObservedObject var recipeDataObserver: RecipeDataObserver
-    @State var description: String
-    @State var quantity: Int
-    @State var measurementUnit: MeasurementUnit
-    @State var index: Int = 0
-    @State var isExisting: Bool = false
+    @Binding var recipe: Recipe
+    @State var description: String = ""
+    @State var quantity: Int = 0
+    @State var measurementUnit: MeasurementUnit = MeasurementUnit.none
+    @State var selectedItem: Int? = nil
+    
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
@@ -101,12 +102,12 @@ struct AddRecipeIngredientModal: View {
                 TextField("Name/Description", text: self.$description)
                 HStack {
                     Text("Quantity")
-                    Stepper("", value: self.$quantity, in: 0...9999)
+                    Stepper("", value: self.$quantity, in: 0...999)
                     Spacer()
                     TextField("", value: self.$quantity, formatter: NumberFormatter())
                         .keyboardType(.numberPad)
                         .multilineTextAlignment(.trailing)
-                        .foregroundColor(self.quantity > 9999 ? Color(UIColor.systemRed) : Color.primary)
+                        .foregroundColor(self.quantity > 999 ? Color(UIColor.systemRed) : Color.primary)
                         .padding(.all, 5)
                         .frame(maxWidth: 64)
                         .background(Color(UIColor.secondarySystemFill))
@@ -128,7 +129,7 @@ struct AddRecipeIngredientModal: View {
                 trailing:
                     HStack {
                         Button(action: {
-                            if self.isExisting == false {
+                            if self.selectedItem == nil {
                                 self.addIngredient()
                             } else {
                                 self.updateIngredient()
@@ -141,26 +142,35 @@ struct AddRecipeIngredientModal: View {
                     }
                 )
         }
+        .onAppear(perform: {
+            if self.selectedItem != nil {
+                self.ingredientDraftBuffer.ingredient = self.recipeDataObserver.ingredients[self.selectedItem!]
+                self.description = self.recipeDataObserver.ingredients[self.selectedItem!].name
+                self.quantity = self.recipeDataObserver.ingredients[self.selectedItem!].quantity
+                self.measurementUnit = MeasurementUnit(rawValue: self.recipeDataObserver.ingredients[self.selectedItem!].unit) ?? MeasurementUnit.none
+            }
+        })
         .onDisappear(perform: {
-            if self.ingredientDraftBuffer.ingredient != nil {
-                self.recipeDataObserver.ingredients[self.index] = self.ingredientDraftBuffer.ingredient!
+            if self.selectedItem != nil {
                 self.ingredientDraftBuffer.reset()
             }
         })
     }
     
     func addIngredient() {
-        self.recipeDataObserver.ingredients.append(RecipeIngredient(id: nil, name: self.description, quantity: self.quantity == 0 ? nil : self.quantity, unit: measurementUnit))
+        let ingredient = Ingredient(permanent: true, insertIntoManagedObjectContext: self.objectManager.managedObjectContext, id: nil, name: self.description, quantity: self.quantity, unit: MeasurementUnit(rawValue: measurementUnit.rawValue).map { $0.rawValue }!, recipe: self.recipe)
+        self.recipe.addToIngredients(ingredient)
+        self.recipeDataObserver.ingredients.append(ingredient)
+        self.objectManager.save()
     }
     
     func updateIngredient() {
-        let id = self.recipeDataObserver.ingredients[self.index].id
-        self.ingredientDraftBuffer.ingredient = RecipeIngredient(id: id, name: self.description, quantity: self.quantity == 0 ? nil : self.quantity, unit: measurementUnit)
-    }
-}
-
-struct RecipeEditIngredients_Previews: PreviewProvider {
-    static var previews: some View {
-        RecipeEditIngredients(recipeDataObserver: RecipeDataObserver(ingredients: recipe1.ingredients, directions: recipe1.directions), editMode: .constant(.active))
+        if self.selectedItem != nil {
+            self.recipe.updateIngredient(self.ingredientDraftBuffer.ingredient!.id, name: self.description, quantity: self.quantity, unit: MeasurementUnit(rawValue: measurementUnit.rawValue).map { $0.rawValue }!)
+            self.recipeDataObserver.ingredients[self.selectedItem!].name = self.description
+            self.recipeDataObserver.ingredients[self.selectedItem!].quantity = self.quantity
+            self.recipeDataObserver.ingredients[self.selectedItem!].unit = self.measurementUnit.rawValue
+            self.objectManager.save()
+        }
     }
 }

@@ -13,9 +13,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     
+    @ObservedObject var objectManager: CoreDataObjectManager = CoreDataObjectManager()
     @ObservedObject var userSettings: UserSettings = UserSettings()
-    @ObservedObject var categoryData: CategoryData = CategoryData()
-    @ObservedObject var userData: UserData = UserData()
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -24,15 +23,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
         // Get the managed object context from the shared persistent container.
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
+            fatalError("Unable to read managed object context.")
+        }
 
         // Create the SwiftUI view and set the context as the value for the managedObjectContext environment keyPath.
         // Add `@Environment(\.managedObjectContext)` in the views that will need the context.
         let contentView = ContentView()
             .environment(\.managedObjectContext, context)
+            .environmentObject(objectManager)
             .environmentObject(userSettings)
-            .environmentObject(categoryData)
-            .environmentObject(userData)
+        
+        objectManager.loadData()
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {

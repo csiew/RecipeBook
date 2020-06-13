@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RecipeIngredientListItem: View {
-    var ingredient: RecipeIngredient
+    var ingredient: Ingredient
     
     var body: some View {
         HStack {
@@ -19,19 +19,13 @@ struct RecipeIngredientListItem: View {
                 .padding(.trailing, 16)
             Spacer()
             Section {
-                if ingredient.quantity != nil {
-                    Text("\(ingredient.quantity!)")
+                if ingredient.quantity > 0 {
+                    Text(String(ingredient.quantity))
                 }
-                if ingredient.unit != MeasurementUnit.none {
-                    Text(ingredient.getUnit())
+                if ingredient.unit != MeasurementUnit.none.rawValue {
+                    Text(MeasurementUnitSupplemental.getLongDescription(unit: MeasurementUnit(rawValue: ingredient.unit)!))
                 }
             }
         }
-    }
-}
-
-struct RecipeIngredientListItem_Previews: PreviewProvider {
-    static var previews: some View {
-        RecipeIngredientListItem(ingredient: sampleIngredient)
     }
 }

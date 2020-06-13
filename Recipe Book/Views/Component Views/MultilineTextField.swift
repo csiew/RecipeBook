@@ -31,9 +31,7 @@ struct MultilineTextField: UIViewRepresentable {
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-}
-
-extension MultilineTextField {
+    
     class Coordinator: NSObject, UITextViewDelegate {
         var parent: MultilineTextField
         
@@ -41,15 +39,7 @@ extension MultilineTextField {
             self.parent = parent
         }
         
-        func textViewDidBeginEditing(_ textView: UITextView) {
-            self.parent.text = textView.text
-        }
-        
         func textViewDidChange(_ textView: UITextView) {
-            self.parent.text = textView.text
-        }
-        
-        func textViewDidEndEditing(_ textView: UITextView) {
             self.parent.text = textView.text
         }
     }

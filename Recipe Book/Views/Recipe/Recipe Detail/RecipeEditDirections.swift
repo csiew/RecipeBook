@@ -8,23 +8,12 @@
 
 import SwiftUI
 
-class DirectionDraftBuffer: ObservableObject {
-    @Published var index: Int = 0
-    @Published var direction: String?
-    
-    func reset() {
-        self.index = 0
-        self.direction = nil
-    }
-}
-
 struct RecipeEditDirections: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var directionDraftBuffer = DirectionDraftBuffer()
     @ObservedObject var recipeDataObserver: RecipeDataObserver
     @Binding var editMode: EditMode
     @State var showAddDirectionModal: Bool = false
-    @State var selectedItem: Int = 0
+    @State var selectedItem: Int? = nil
     
     var body: some View {
         Group {
@@ -51,12 +40,12 @@ struct RecipeEditDirections: View {
                     })
                     .sheet(isPresented: self.$showAddDirectionModal, content: {
                         AddRecipeDirectionModal(
-                            directionDraftBuffer: self.directionDraftBuffer,
                             recipeDataObserver: self.recipeDataObserver,
-                            index: self.selectedItem,
-                            description: self.recipeDataObserver.directions[self.selectedItem],
-                            isExisting: true
+                            selectedItem: self.selectedItem
                         )
+                        .onDisappear(perform: {
+                            self.selectedItem = nil
+                        })
                     })
                 }
             }
@@ -70,7 +59,6 @@ struct RecipeEditDirections: View {
                         Image(systemName: "plus")
                     }.sheet(isPresented: $showAddDirectionModal, content: {
                         AddRecipeDirectionModal(
-                            directionDraftBuffer: self.directionDraftBuffer,
                             recipeDataObserver: self.recipeDataObserver
                         )
                     })
@@ -82,11 +70,9 @@ struct RecipeEditDirections: View {
 
 struct AddRecipeDirectionModal: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var directionDraftBuffer: DirectionDraftBuffer
     @ObservedObject var recipeDataObserver: RecipeDataObserver
-    @State var index: Int = 0
+    @State var selectedItem: Int? = nil
     @State var description: String = ""
-    @State var isExisting: Bool = false
     
     var body: some View {
         NavigationView {
@@ -99,7 +85,7 @@ struct AddRecipeDirectionModal: View {
                                 .strokeBorder(Color.primary, lineWidth: 1)
                         )
                         .overlay(
-                            Text("\(index+1)")
+                            Text("\((selectedItem ?? self.recipeDataObserver.directions.count) + 1)")
                                 .fontWeight(.heavy)
                                 .foregroundColor(Color(UIColor.systemBackground))
                         )
@@ -120,7 +106,7 @@ struct AddRecipeDirectionModal: View {
                         trailing:
                             HStack {
                                 Button(action: {
-                                    if self.isExisting == false {
+                                    if self.selectedItem == nil {
                                         self.addDirection()
                                     } else {
                                         self.updateDirection()
@@ -133,10 +119,10 @@ struct AddRecipeDirectionModal: View {
                             }
                         )
             }
-            .onDisappear(perform: {
-                if self.directionDraftBuffer.direction != nil {
-                    self.recipeDataObserver.directions[self.index] = self.description
-                    self.directionDraftBuffer.reset()
+            .onAppear(perform: {
+                if self.selectedItem != nil {
+                    self.description = self.recipeDataObserver.directions[self.selectedItem!]
+                    print(self.description)
                 }
             })
         }
@@ -147,13 +133,8 @@ struct AddRecipeDirectionModal: View {
     }
     
     func updateDirection() {
-        self.directionDraftBuffer.index = self.index
-        self.directionDraftBuffer.direction = self.description
-    }
-}
-
-struct RecipeEditDirections_Previews: PreviewProvider {
-    static var previews: some View {
-        RecipeEditDirections(recipeDataObserver: RecipeDataObserver(ingredients: recipe1.ingredients, directions: recipe1.directions), editMode: .constant(.active))
+        if self.selectedItem != nil {
+            self.recipeDataObserver.directions[self.selectedItem!] = self.description
+        }
     }
 }

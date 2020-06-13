@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var userSettings: UserSettings
+    @EnvironmentObject var objectManager: CoreDataObjectManager
     
     var body: some View {
         NavigationView {
@@ -19,6 +20,11 @@ struct SettingsView: View {
                     NavigationLink("Appearance", destination: AppearanceSettingsView())
                     NavigationLink("Notifications", destination: NotificationsSettingsView())
                     NavigationLink("Account", destination: AccountSettingsView())
+                }
+                Section {
+                    Button(action: { self.objectManager.flush() }) {
+                        Text("Flush Data").foregroundColor(Color(UIColor.systemRed))
+                    }
                 }
             }
             .listStyle(GroupedListStyle())

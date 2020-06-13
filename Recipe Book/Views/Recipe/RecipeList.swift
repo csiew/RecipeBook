@@ -18,9 +18,8 @@ struct RecipeGroup {
 }
 
 struct RecipeList: View {
+    @EnvironmentObject var objectManager: CoreDataObjectManager
     @EnvironmentObject var userSettings: UserSettings
-    @EnvironmentObject var categoryData: CategoryData
-    @EnvironmentObject var userData: UserData
     @State private var selectedRecipe: Int = 0
     @State private var sortActionSheetVisible: Bool = false
     @State private var sortingOption: RecipeSortingOption = .ascending
@@ -28,11 +27,11 @@ struct RecipeList: View {
     func sortedRecipes(sort: RecipeSortingOption) -> [Recipe] {
         switch sort {
         case .none:
-            return userData.getRecipes()
+            return objectManager.recipes.compactMap({ $0 })
         case .ascending:
-            return userData.getRecipes().sorted(by: { $0.name < $1.name })
+            return objectManager.recipes.compactMap({ $0 }).sorted(by: { $0.name < $1.name })
         case .descending:
-            return userData.getRecipes().sorted(by: { $0.name > $1.name })
+            return objectManager.recipes.compactMap({ $0 }).sorted(by: { $0.name > $1.name })
         }
     }
     
@@ -75,7 +74,7 @@ struct RecipeList: View {
                     )
                 }
                 .padding(.trailing, 8)
-                NavigationLink(destination: RecipeDetail(recipe: Recipe(), editMode: .active, isNewRecipe: true)) {
+                NavigationLink(destination: RecipeDetail(editMode: .active, isNewRecipe: true)) {
                     Image(systemName: "plus")
                 }
             }
@@ -89,7 +88,11 @@ struct RecipeList: View {
                 ForEach(sortedGroupedRecipes(sort: sortingOption), id: \.self.id) { group in
                     Section(header: Text(group.id)) {
                         ForEach(group.recipes, id: \.self.id) { recipe in
-                            NavigationLink(recipe.name, destination: RecipeDetail(recipe: recipe, editMode: .inactive))
+                            NavigationLink(destination: RecipeDetail(editMode: .inactive, recipe: recipe)) {
+                                VStack {
+                                    Text(recipe.name)
+                                }
+                            }
                         }
                     }
                 }
@@ -97,7 +100,11 @@ struct RecipeList: View {
         case false:
             return AnyView(
                 ForEach(sortedRecipes(sort: sortingOption), id: \.self.id) { recipe in
-                    NavigationLink(recipe.name, destination: RecipeDetail(recipe: recipe, editMode: .inactive))
+                    NavigationLink(destination: RecipeDetail(editMode: .inactive, recipe: recipe)) {
+                        VStack {
+                            Text(recipe.name)
+                        }
+                    }
                 }
             )
         }

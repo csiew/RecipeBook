@@ -15,6 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let managedObjectContext = persistentContainer.viewContext
+        
+        let _ = createRecordForEntity("Recipe", inManagedObjectContext: managedObjectContext)
+        
+        do {
+            try managedObjectContext.save()
+        } catch {
+            print("Error: Unable to save managed object context")
+        }
+        
         // Override point for customization after application launch.
         return true
     }
@@ -76,6 +86,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
+    }
+    
+    // MARK: - Core Data access improvements by Cocoacasts
+    // https://cocoacasts.com/reading-and-updating-managed-objects-with-core-data
+    
+    private func createRecordForEntity(_ entity: String, inManagedObjectContext managedObjectContext: NSManagedObjectContext) -> NSManagedObject? {
+        // Helpers
+        var result: NSManagedObject?
+
+        // Create Entity Description
+        let entityDescription = NSEntityDescription.entity(forEntityName: entity, in: managedObjectContext)
+
+        if let entityDescription = entityDescription {
+            // Create Managed Object
+            result = NSManagedObject(entity: entityDescription, insertInto: managedObjectContext)
+        }
+
+        return result
+    }
+    
+    private func fetchRecordsForEntity(_ entity: TypeCatalogue, inManagedObjectContext managedObjectContext: NSManagedObjectContext) -> [NSManagedObject] {
+        // Create Fetch Request
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.rawValue)
+
+        // Helpers
+        var result = [NSManagedObject]()
+
+        do {
+            // Execute Fetch Request
+            let records = try managedObjectContext.fetch(fetchRequest)
+
+            if let records = records as? [NSManagedObject] {
+                result = records
+            }
+
+        } catch {
+            print("Unable to fetch managed objects for entity \(entity.rawValue).")
+        }
+
+        return result
     }
 
 }

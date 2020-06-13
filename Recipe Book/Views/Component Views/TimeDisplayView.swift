@@ -39,9 +39,9 @@ struct TimeDisplayView: View {
             TimeUnitDisplayView(timeQuantity: seconds, timeUnit: .seconds)
         }
         .frame(maxWidth: .infinity)
-        .onAppear {
+        .onAppear(perform: {
             (self.days, self.hours, self.minutes, self.seconds) = TimeDetection.secondsToDHMS(seconds: self.timeInSeconds)
-        }
+        })
     }
 }
 

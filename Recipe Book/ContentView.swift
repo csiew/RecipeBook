@@ -9,9 +9,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var objectManager: CoreDataObjectManager
     @EnvironmentObject var userSettings: UserSettings
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var userData: UserData
  
     var body: some View {
         TabView(selection: $userSettings.selectedTab) {
@@ -59,6 +59,5 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .environmentObject(UserSettings())
-            .environmentObject(UserData())
     }
 }
