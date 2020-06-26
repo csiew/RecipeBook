@@ -20,7 +20,7 @@ public class Ingredient: NSManagedObject {
     @NSManaged public var name: String
     @NSManaged public var quantity: Int
     @NSManaged public var unit: String
-    @NSManaged public var recipe: Recipe?
+    @NSManaged public var recipe: Recipe
 
     public override func awakeFromInsert() {
         super.awakeFromInsert()
@@ -45,7 +45,7 @@ public class Ingredient: NSManagedObject {
         name: String? = nil,
         quantity: Int? = nil,
         unit: String? = nil,
-        recipe: Recipe?
+        recipe: Recipe
     ) {
         if permanent == true {
             self.init(entity: NSEntityDescription.entity(forEntityName: "Ingredient", in: context)!, insertInto: context)
@@ -56,6 +56,6 @@ public class Ingredient: NSManagedObject {
         self.name = name ?? ""
         self.quantity = quantity ?? 0
         self.unit = unit ?? "none"
-        self.recipe = recipe!
+        self.recipe = recipe
     }
 }

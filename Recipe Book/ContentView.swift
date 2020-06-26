@@ -15,7 +15,7 @@ struct ContentView: View {
  
     var body: some View {
         TabView(selection: $userSettings.selectedTab) {
-            HomeView()
+            RecipeList()
                 .tabItem {
                     VStack {
                         Image(systemName: "list.bullet")
@@ -32,7 +32,6 @@ struct ContentView: View {
                 }
                 .tag(1)
         }
-        .environment(\.font, self.userSettings.fontFamily)
         .environment(\.colorScheme, self.userSettings.theme)
         .preferredColorScheme(self.userSettings.theme)
     }
@@ -41,6 +40,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(CoreDataObjectManager())
             .environmentObject(UserSettings())
     }
 }

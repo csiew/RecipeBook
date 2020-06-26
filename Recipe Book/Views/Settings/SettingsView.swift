@@ -28,7 +28,8 @@ struct SettingsView: View {
                 }
             }
             .listStyle(GroupedListStyle())
-            .navigationBarTitle("Settings", displayMode: .inline)
+            .navigationBarTitle("Settings")
+            .navigationViewStyle(DoubleColumnNavigationViewStyle())
         }
     }
 }

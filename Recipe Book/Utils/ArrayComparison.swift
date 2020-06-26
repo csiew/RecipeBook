@@ -36,13 +36,13 @@ final class ArrayComparison {
         return false
     }
     
-    static func isMatchingIngredient(array1: [Any], array2: [Any]) -> Bool {
+    static func isMatchingIngredient(array1: [IngredientDraft], array2: [Ingredient]) -> Bool {
         if array1.count == array2.count {
-            let array1Sorted = array1.sorted(by: { ($0 as! Ingredient).name < ($1 as! Ingredient).name })
-            let array2Sorted = array2.sorted(by: { ($0 as! Ingredient).name < ($1 as! Ingredient).name })
+            let array1Sorted = array1.sorted(by: { $0.name < $1.name })
+            let array2Sorted = array2.sorted(by: { $0.name < $1.name })
             
-            for (index, item) in array1Sorted.enumerated() {
-                if (item as! Ingredient) != (array2Sorted[index] as! Ingredient) {
+            for (index, draftItem) in array1Sorted.enumerated() {
+                if ((draftItem.id != array2Sorted[index].id) || (draftItem.name != array2Sorted[index].name) || (draftItem.quantity != array2Sorted[index].quantity) || (draftItem.unit != MeasurementUnit.init(rawValue: array2Sorted[index].unit))) {
                     return false
                 }
             }

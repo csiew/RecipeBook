@@ -23,7 +23,9 @@ struct RecipeList: View {
     @EnvironmentObject var objectManager: CoreDataObjectManager
     @EnvironmentObject var userSettings: UserSettings
     @State var editMode: EditMode = .inactive
-    @State private var sortActionSheetVisible: Bool = false
+    @State private var showSortingMenu: Bool = false
+    @State private var showActionMenu: Bool = false
+    @State private var showSettingsModal: Bool = false
     @State private var sortingOption: RecipeSortingOption = .alphanumericAscending
     
     func sortedRecipes(sort: RecipeSortingOption) -> [Recipe] {
@@ -80,27 +82,34 @@ struct RecipeList: View {
     }
     
     var body: some View {
-        List {
-            recipeListView()
-        }
-        .listStyle(PlainListStyle())
-        .navigationBarTitle("Recipes", displayMode: .inline)
-        .navigationBarItems(
-            leading:
-                HStack {
-                    if self.editMode == .inactive {
-                        NavigationLink(destination: RecipeDetail(editMode: .active, isNewRecipe: true)) {
-                            Image(systemName: "plus")
+        NavigationView {
+            List {
+                recipeListView()
+            }
+            .listStyle(DefaultListStyle())
+            .navigationBarTitle("Recipes")
+            .navigationViewStyle(DoubleColumnNavigationViewStyle())
+            .navigationBarItems(
+                leading:
+                    HStack {
+                        Button(action: {
+                            self.editMode.toggle()
+                        }) {
+                            if self.editMode == .inactive {
+                                Text(self.editMode.title)
+                            } else {
+                                Text(self.editMode.title).bold()
+                            }
                         }
-                    }
-                },
-            trailing:
-                HStack {
-                    if self.editMode == .inactive {
-                        Button(action: { self.sortActionSheetVisible.toggle() }) {
+                    },
+                trailing:
+                    HStack {
+                        Button(action: {
+                            self.showSortingMenu = true
+                        }) {
                             Image(systemName: "arrow.up.arrow.down")
                         }
-                        .actionSheet(isPresented: $sortActionSheetVisible) {
+                        .actionSheet(isPresented: $showSortingMenu) {
                             ActionSheet(
                                 title: Text("Sort by..."),
                                 buttons: [
@@ -113,16 +122,13 @@ struct RecipeList: View {
                             )
                         }
                         .padding(.trailing, 8)
-                    }
-                    Button(action: { self.editMode.toggle() }) {
-                        if self.editMode == .inactive {
-                            Text(self.editMode.title)
-                        } else {
-                            Text(self.editMode.title).bold()
+                        NavigationLink(destination: RecipeDetail(editMode: .active, isNewRecipe: true)) {
+                            Image(systemName: "square.and.pencil")
                         }
+                        .isDetailLink(true)
                     }
-                }
-        )
+            )
+        }
         .environment(\.editMode, self.$editMode)
     }
     
@@ -138,6 +144,7 @@ struct RecipeList: View {
                                     Text(recipe.name)
                                 }
                             }
+                            .isDetailLink(true)
                         }
                     }
                 }
@@ -153,6 +160,7 @@ struct RecipeList: View {
                             Text(recipe.name)
                         }
                     }
+                    .isDetailLink(true)
                 }
                 .onDelete(perform: { offsets in
                     self.objectManager.recipes.remove(atOffsets: offsets)

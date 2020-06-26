@@ -10,21 +10,23 @@ import SwiftUI
 
 struct RecipeEditDirections: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var objectManager: CoreDataObjectManager
     @ObservedObject var recipeDataObserver: RecipeDataObserver
-    @Binding var editMode: EditMode
+    @State var recipe: Recipe
     @State var showAddDirectionModal: Bool = false
     @State var selectedItem: Int? = nil
+    @State var editMode: EditMode = .active
     
     var body: some View {
         Group {
-            if self.recipeDataObserver.directions.count == 0 {
+            if self.recipeDataObserver.draftDirections.count == 0 {
                 Text("No directions for this recipe")
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else {
                 List {
-                    ForEach(0..<recipeDataObserver.directions.count, id: \.self) { index in
-                        RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.directions[index])
+                    ForEach(0..<recipeDataObserver.draftDirections.count, id: \.self) { index in
+                        RecipeDirectionListItem(index: index, direction: self.recipeDataObserver.draftDirections[index])
                             .padding(.all, 16)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .onTapGesture(perform: {
@@ -33,16 +35,18 @@ struct RecipeEditDirections: View {
                             })
                     }
                     .onMove(perform: { (offsets, targetOffset) in
-                        self.recipeDataObserver.directions.move(fromOffsets: offsets, toOffset: targetOffset)
+                        self.recipeDataObserver.draftDirections.move(fromOffsets: offsets, toOffset: targetOffset)
                     })
                     .onDelete(perform: { offsets in
-                        self.recipeDataObserver.directions.remove(atOffsets: offsets)
+                        self.recipeDataObserver.draftDirections.remove(atOffsets: offsets)
                     })
                     .sheet(isPresented: self.$showAddDirectionModal, content: {
                         AddRecipeDirectionModal(
                             recipeDataObserver: self.recipeDataObserver,
+                            recipe: self.$recipe,
                             selectedItem: self.selectedItem
                         )
+                        .environmentObject(self.objectManager)
                         .onDisappear(perform: {
                             self.selectedItem = nil
                         })
@@ -59,8 +63,10 @@ struct RecipeEditDirections: View {
                         Image(systemName: "plus")
                     }.sheet(isPresented: $showAddDirectionModal, content: {
                         AddRecipeDirectionModal(
-                            recipeDataObserver: self.recipeDataObserver
+                            recipeDataObserver: self.recipeDataObserver,
+                            recipe: self.$recipe
                         )
+                        .environmentObject(self.objectManager)
                     })
                 }
         )
@@ -70,7 +76,9 @@ struct RecipeEditDirections: View {
 
 struct AddRecipeDirectionModal: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var objectManager: CoreDataObjectManager
     @ObservedObject var recipeDataObserver: RecipeDataObserver
+    @Binding var recipe: Recipe
     @State var selectedItem: Int? = nil
     @State var description: String = ""
     
@@ -85,7 +93,7 @@ struct AddRecipeDirectionModal: View {
                                 .strokeBorder(Color.primary, lineWidth: 1)
                         )
                         .overlay(
-                            Text("\((selectedItem ?? self.recipeDataObserver.directions.count) + 1)")
+                            Text("\((selectedItem ?? self.recipeDataObserver.draftDirections.count) + 1)")
                                 .fontWeight(.heavy)
                                 .foregroundColor(Color(UIColor.systemBackground))
                         )
@@ -121,7 +129,7 @@ struct AddRecipeDirectionModal: View {
             }
             .onAppear(perform: {
                 if self.selectedItem != nil {
-                    self.description = self.recipeDataObserver.directions[self.selectedItem!]
+                    self.description = self.recipeDataObserver.draftDirections[self.selectedItem!]
                     print(self.description)
                 }
             })
@@ -129,12 +137,16 @@ struct AddRecipeDirectionModal: View {
     }
     
     func addDirection() {
-        self.recipeDataObserver.directions.append(self.description)
+        self.recipe.directions.append(self.description)
+        self.recipeDataObserver.draftDirections.append(self.description)
+        self.objectManager.save()
     }
     
     func updateDirection() {
         if self.selectedItem != nil {
-            self.recipeDataObserver.directions[self.selectedItem!] = self.description
+            self.recipe.directions[self.selectedItem!] = self.description
+            self.recipeDataObserver.draftDirections[self.selectedItem!] = self.description
+            self.objectManager.save()
         }
     }
 }

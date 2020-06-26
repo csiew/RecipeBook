@@ -29,3 +29,25 @@ struct RecipeIngredientListItem: View {
         }
     }
 }
+
+struct RecipeIngredientDraftListItem: View {
+    var ingredient: IngredientDraft
+    
+    var body: some View {
+        HStack {
+            Text(ingredient.name)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.trailing, 16)
+            Spacer()
+            Section {
+                if ingredient.quantity > 0 {
+                    Text(String(ingredient.quantity))
+                }
+                if ingredient.unit != MeasurementUnit.none {
+                    Text(ingredient.unit.rawValue)
+                }
+            }
+        }
+    }
+}

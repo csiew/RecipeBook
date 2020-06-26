@@ -2,25 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>PublicSans-Black.otf</string>
-		<string>PublicSans-BlackItalic.otf</string>
-		<string>PublicSans-Bold.otf</string>
-		<string>PublicSans-BoldItalic.otf</string>
-		<string>PublicSans-Italic.otf</string>
-		<string>PublicSans-Regular.otf</string>
-		<string>gelasio-bold.tff</string>
-		<string>gelasio-bolditalic.ttf</string>
-		<string>gelasio-italic.ttf</string>
-		<string>gelasio-regular.ttf</string>
-		<string>FiraSans-Bold.otf</string>
-		<string>FiraSans-BoldItalic.otf</string>
-		<string>FiraSans-Book.otf</string>
-		<string>FiraSans-BookItalic.otf</string>
-		<string>FiraSans-Light.otf</string>
-		<string>FiraSans-LightItalic.otf</string>
-	</array>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.lifestyle</string>
 	<key>CFBundleDevelopmentRegion</key>

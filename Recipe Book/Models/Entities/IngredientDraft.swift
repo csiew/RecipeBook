@@ -8,26 +8,24 @@
 
 import Foundation
 
-struct RecipeIngredient: Hashable, Identifiable {
+struct IngredientDraft: Hashable, Identifiable {
     var id: String
     var name: String
     var quantity: Int
     var unit: MeasurementUnit
-    var recipe: Recipe?
     
-    init(id: String? = nil, name: String, quantity: Int? = nil, unit: MeasurementUnit? = MeasurementUnit.none, recipe: Recipe?) {
+    init(id: String? = nil, name: String, quantity: Int? = nil, unit: MeasurementUnit? = MeasurementUnit.none) {
         self.id = id ?? UUID().uuidString
         self.name = name
         self.quantity = quantity ?? 0
-        self.unit = unit!
-        self.recipe = recipe
+        self.unit = unit ?? MeasurementUnit.none
     }
     
     func getUnit() -> String {
         return MeasurementUnitSupplemental.getShortDescription(unit: self.unit)
     }
     
-    func isMatching(ingredient: RecipeIngredient) -> Bool {
+    func isMatching(ingredient: IngredientDraft) -> Bool {
         if
             self.id == ingredient.id &&
             self.name == ingredient.name &&

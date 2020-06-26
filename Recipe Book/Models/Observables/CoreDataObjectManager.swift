@@ -73,6 +73,7 @@ final class CoreDataObjectManager: ObservableObject {
             print("Failed to fetch recipes: \(error)")
         }
         print("Result count: ", results.count)
+        print(results)
         self.recipes = results
     }
     
